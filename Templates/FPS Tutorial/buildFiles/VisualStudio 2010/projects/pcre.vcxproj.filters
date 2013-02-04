@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <ItemGroup>
+      <Filter Include="Source Files">
+         <UniqueIdentifier>{0a20e449-a55b-4739-b8f3-92c4bd1d2f53}</UniqueIdentifier>
+         <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc</Extensions>
+      </Filter>
+      <Filter Include="Source Files\lib">
+         <UniqueIdentifier>{efff3f19-3c78-41c1-a5bb-5fa933755e6d}</UniqueIdentifier>
+      </Filter>
+   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Torque.rc">
+      <Filter>Source Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+   <ItemGroup>
+      <ClCompile Include="E:\usmc\Engine\lib\pcre\pcrecpp.cc">
+         <Filter>Source Files\lib</Filter>
+      </ClCompile>
+      <ClCompile Include="E:\usmc\Engine\lib\pcre\pcre_chartables.c">
+         <Filter>Source Files\lib</Filter>
+      </ClCompile>
+      <ClCompile Include="E:\usmc\Engine\lib\pcre\pcre_compile.c">
+         <Filter>Source Files\lib</Filter>
+      </ClCompile>
+      <ClCompile Include="E:\usmc\Engine\lib\pcre\pcre_config.c">
+         <Filter>Source Files\lib</Filter>
+      </ClCompile>
+      <ClCompile Include="E:\usmc\Engine\lib\pcre\pcre_dfa_exec.c">
+         <Filter>Source Files\lib</Filter>
+      </ClCompile>
+      <ClCompile Include="E:\usmc\Engine\lib\pcre\pcre_exec.c">
+         <Filter>Source Files\lib</Filter>
+      </ClCompile>
+      <ClCompile Include="E:\usmc\Engine\lib\pcre\pcre_fullinfo.c">
+         <Filter>Source Files\lib</Filter>
+      </ClCompile>
+      <ClCompile Include="E:\usmc\Engine\lib\pcre\pcre_get.c">
+         <Filter>Source Files\lib</Filter>
+      </ClCompile>
+      <ClCompile Include="E:\usmc\Engine\lib\pcre\pcre_globals.c">
+         <Filter>Source Files\lib</Filter>
+      </ClCompile>
+      <ClCompile Include="E:\usmc\Engine\lib\pcre\pcre_info.c">
+         <Filter>Source Files\lib</Filter>
+      </ClCompile>
+      <ClCompile Include="E:\usmc\Engine\lib\pcre\pcre_maketables.c">
+         <Filter>Source Files\lib</Filter>
+      </ClCompile>
+      <ClCompile Include="E:\usmc\Engine\lib\pcre\pcre_newline.c">
+         <Filter>Source Files\lib</Filter>
+      </ClCompile>
+      <ClCompile Include="E:\usmc\Engine\lib\pcre\pcre_ord2utf8.c">
+         <Filter>Source Files\lib</Filter>
+      </ClCompile>
+      <ClCompile Include="E:\usmc\Engine\lib\pcre\pcre_refcount.c">
+         <Filter>Source Files\lib</Filter>
+      </ClCompile>
+      <ClCompile Include="E:\usmc\Engine\lib\pcre\pcre_scanner.cc">
+         <Filter>Source Files\lib</Filter>
+      </ClCompile>
+      <ClCompile Include="E:\usmc\Engine\lib\pcre\pcre_stringpiece.cc">
+         <Filter>Source Files\lib</Filter>
+      </ClCompile>
+      <ClCompile Include="E:\usmc\Engine\lib\pcre\pcre_study.c">
+         <Filter>Source Files\lib</Filter>
+      </ClCompile>
+      <ClCompile Include="E:\usmc\Engine\lib\pcre\pcre_tables.c">
+         <Filter>Source Files\lib</Filter>
+      </ClCompile>
+      <ClCompile Include="E:\usmc\Engine\lib\pcre\pcre_try_flipped.c">
+         <Filter>Source Files\lib</Filter>
+      </ClCompile>
+      <ClCompile Include="E:\usmc\Engine\lib\pcre\pcre_ucp_searchfuncs.c">
+         <Filter>Source Files\lib</Filter>
+      </ClCompile>
+      <ClCompile Include="E:\usmc\Engine\lib\pcre\pcre_valid_utf8.c">
+         <Filter>Source Files\lib</Filter>
+      </ClCompile>
+      <ClCompile Include="E:\usmc\Engine\lib\pcre\pcre_version.c">
+         <Filter>Source Files\lib</Filter>
+      </ClCompile>
+      <ClCompile Include="E:\usmc\Engine\lib\pcre\pcre_xclass.c">
+         <Filter>Source Files\lib</Filter>
+      </ClCompile>
+   </ItemGroup>
+   <ItemGroup>
+      <ClInclude Include="E:\usmc\Engine\lib\pcre\config.h">
+         <Filter>Source Files\lib</Filter>
+      </ClInclude>
+      <ClInclude Include="E:\usmc\Engine\lib\pcre\pcre.h">
+         <Filter>Source Files\lib</Filter>
+      </ClInclude>
+      <ClInclude Include="E:\usmc\Engine\lib\pcre\pcrecpp.h">
+         <Filter>Source Files\lib</Filter>
+      </ClInclude>
+      <ClInclude Include="E:\usmc\Engine\lib\pcre\pcrecpparg.h">
+         <Filter>Source Files\lib</Filter>
+      </ClInclude>
+      <ClInclude Include="E:\usmc\Engine\lib\pcre\pcrecpp_internal.h">
+         <Filter>Source Files\lib</Filter>
+      </ClInclude>
+      <ClInclude Include="E:\usmc\Engine\lib\pcre\pcreposix.h">
+         <Filter>Source Files\lib</Filter>
+      </ClInclude>
+      <ClInclude Include="E:\usmc\Engine\lib\pcre\pcre_internal.h">
+         <Filter>Source Files\lib</Filter>
+      </ClInclude>
+      <ClInclude Include="E:\usmc\Engine\lib\pcre\pcre_scanner.h">
+         <Filter>Source Files\lib</Filter>
+      </ClInclude>
+      <ClInclude Include="E:\usmc\Engine\lib\pcre\pcre_stringpiece.h">
+         <Filter>Source Files\lib</Filter>
+      </ClInclude>
+      <ClInclude Include="E:\usmc\Engine\lib\pcre\ucp.h">
+         <Filter>Source Files\lib</Filter>
+      </ClInclude>
+      <ClInclude Include="E:\usmc\Engine\lib\pcre\ucpinternal.h">
+         <Filter>Source Files\lib</Filter>
+      </ClInclude>
+      <ClInclude Include="E:\usmc\Engine\lib\pcre\ucptable.h">
+         <Filter>Source Files\lib</Filter>
+      </ClInclude>
+   </ItemGroup>
+   <ItemGroup>
+   </ItemGroup>
+</Project>
