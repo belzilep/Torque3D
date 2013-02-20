@@ -40,7 +40,7 @@ public:
       ModeSlowing,                    // AI is slowing down as it reaches it's destination.
 	};
 
-private:
+protected:
    MoveState mMoveState;
    F32 mMoveSpeed;
    F32 mMoveTolerance;                 // Distance from destination before we stop
@@ -72,6 +72,8 @@ public:
    bool onAdd();
 
    virtual bool getAIMove( Move *move );
+
+   virtual void onReachDestination();
 
    // Targeting and aiming sets/gets
    void setAimObject( GameBase *targetObject );

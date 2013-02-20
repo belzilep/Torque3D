@@ -241,6 +241,11 @@ void AIPlayer::clearAim()
    mAimOffset = Point3F(0.0f, 0.0f, 0.0f);
 }
 
+
+void AIPlayer::onReachDestination()
+{
+}
+
 /**
  * This method calculates the moves for the AI player
  *
@@ -339,6 +344,7 @@ bool AIPlayer::getAIMove(Move *movePtr)
       {
          mMoveState = ModeStop;
          throwCallback("onReachDestination");
+		 onReachDestination();
       }
       else 
       {
