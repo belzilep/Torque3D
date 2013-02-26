@@ -246,6 +246,10 @@ void AIPlayer::onReachDestination()
 {
 }
 
+void AIPlayer::update()
+{
+}
+
 /**
  * This method calculates the moves for the AI player
  *
@@ -453,6 +457,8 @@ bool AIPlayer::getAIMove(Move *movePtr)
       movePtr->trigger[i] = getImageTriggerState(i);
 
    mLastLocation = location;
+
+   update(); // Made in Flying Squirrels
 
    return true;
 }

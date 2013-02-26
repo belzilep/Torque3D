@@ -74,6 +74,7 @@ public:
    virtual bool getAIMove( Move *move );
 
    virtual void onReachDestination();
+   virtual void update();
 
    // Targeting and aiming sets/gets
    void setAimObject( GameBase *targetObject );
