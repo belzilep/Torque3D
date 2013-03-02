@@ -458,7 +458,11 @@ bool AIPlayer::getAIMove(Move *movePtr)
 
    mLastLocation = location;
 
-   update(); // Made in Flying Squirrels
+   if (isServerObject())
+   {
+	   update(); // Made in Flying Squirrels
+   }
+   
 
    return true;
 }

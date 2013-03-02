@@ -268,7 +268,11 @@ struct PlayerData: public ShapeBaseData {
       LandAnim,
       JetAnim,
 
-      // 
+	  // Ajouts Persos
+	  //AttackAnim, // Animation d'attaque
+
+	  // 
+	  //!\ Changer la valeur de NumTableActionAnims en fonction de la derniere animation
       NumTableActionAnims = JetAnim + 1,
 
       NumExtraActionAnims = 512 - NumTableActionAnims,

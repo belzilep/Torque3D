@@ -174,6 +174,8 @@ PlayerData::ActionAnimationDef PlayerData::ActionAnimationList[NumTableActionAni
    { "standjump" },  // StandJumpAnim
    { "land" },       // LandAnim
    { "jet" },        // JetAnim
+
+   //{ "damage" },	 // Notre AttackAnim
 };
 
 
@@ -3677,6 +3679,7 @@ void Player::updateActionThread()
          offset = mDataBlock->decalOffset * getScale().x;
       }
 
+	  // Probablement qu'il parle des contacts entre les pas et le sol (triggeredLeft voudrait dire que le pied gauche touche le sol ?
       if( triggeredLeft || triggeredRight )
       {
          Point3F rot, pos;
