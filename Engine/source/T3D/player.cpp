@@ -3759,7 +3759,10 @@ void Player::updateActionThread()
       //The scripting language will get a call back when a script animation has finished...
       //  example: When the chat menu animations are done playing...
       if ( isServerObject() && mActionAnimation.action >= PlayerData::NumTableActionAnims )
+	  {
          mDataBlock->animationDone_callback( this );
+		 onAnimationDone();
+	  }
       pickActionAnimation();
    }
 

@@ -621,6 +621,9 @@ protected:
    virtual void pickBestMoveAction(U32 startAnim, U32 endAnim, U32 * action, bool * forward) const;
    virtual void pickActionAnimation();
 
+   // CallBack lors de la fin d'une animation
+   virtual void	onAnimationDone(){};
+
    /// @name Mounted objects
    /// @{
    virtual void onUnmount( ShapeBase *obj, S32 node );

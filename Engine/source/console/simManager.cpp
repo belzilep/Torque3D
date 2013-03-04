@@ -582,7 +582,7 @@ bool isShuttingDown()
 }
 
 }
-
+// </Sim>
 
 #endif // DOXYGENIZING.
 
@@ -608,3 +608,5 @@ void SimDataBlockGroup::sort()
     	dQsort(objectList.address(),objectList.size(),sizeof(SimObject *),compareModifiedKey);
    }
 }
+
+
