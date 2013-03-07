@@ -49,6 +49,9 @@
 ///
 void ShaderConstHandles::init( GFXShader *shader, CustomMaterial* mat /*=NULL*/ )
 {
+	// FlyingSquirrels
+   mTimerSC = shader->getShaderConstHandle(ShaderGenVars::timer);
+
    mDiffuseColorSC = shader->getShaderConstHandle("$diffuseMaterialColor");
    mTexMatSC = shader->getShaderConstHandle(ShaderGenVars::texMat);
    mToneMapTexSC = shader->getShaderConstHandle(ShaderGenVars::toneMap);
@@ -996,6 +999,11 @@ void ProcessedShaderMaterial::_setShaderConstants(SceneRenderState * state, cons
 
    shaderConsts->setSafe(handles->mParallaxInfoSC, mMaterial->mParallaxScale[stageNum]);   
    shaderConsts->setSafe(handles->mMinnaertConstantSC, mMaterial->mMinnaertConstant[stageNum]);
+
+   // FlyingSquirrels
+   if ( handles->mTimerSC->isValid() ) 
+	   shaderConsts->set( handles->mTimerSC, mMaterial->mTimer);  
+
 
    if ( handles->mSubSurfaceParamsSC->isValid() )
    {

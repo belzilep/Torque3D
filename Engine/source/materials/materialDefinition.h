@@ -197,6 +197,9 @@ public:
    //-----------------------------------------------------------------------
    // Data
    //-----------------------------------------------------------------------
+
+	// Variables rajoutées par FlyingSquirrels
+   F32 mTimer;
    FileName mDiffuseMapFilename[MAX_STAGES];
    FileName mOverlayMapFilename[MAX_STAGES];
    FileName mLightMapFilename[MAX_STAGES];

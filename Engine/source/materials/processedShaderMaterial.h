@@ -41,6 +41,9 @@ class CustomMaterial;
 class ShaderConstHandles
 {
 public:
+	// FlyingSquirrels
+   GFXShaderConstHandle* mTimerSC;
+
    GFXShaderConstHandle* mDiffuseColorSC;
    GFXShaderConstHandle* mToneMapTexSC;
    GFXShaderConstHandle* mTexMatSC;

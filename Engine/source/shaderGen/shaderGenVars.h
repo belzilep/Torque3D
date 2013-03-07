@@ -32,6 +32,9 @@
 ///
 struct ShaderGenVars
 {
+	// FlyingSquirrels
+	const static String timer;
+
    const static String modelview;
    const static String worldViewOnly;
    const static String worldToCamera;
