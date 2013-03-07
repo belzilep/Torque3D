@@ -624,55 +624,55 @@ void ConvexShape::buildConvex( const Box3F &box, Convex *convex )
 
 bool ConvexShape::buildPolyList( PolyListContext context, AbstractPolyList *plist, const Box3F &box, const SphereF &sphere )  
 {  
-	if ( mGeometry.points.empty() )    
-		return false;  
-
-	// If we're exporting deal with that first.  
-	if ( context == PLC_Export )  
-	{  
-		AssertFatal( dynamic_cast<OptimizedPolyList*>( plist ), "ConvexShape::buildPolyList - Bad polylist for export!" );  
-		_export( (OptimizedPolyList*)plist, box, sphere );  
-		return true;  
-	}  
-
-	plist->setTransform( &mObjToWorld, mObjScale );  
-	plist->setObject( this );  
-
-
-	// Add points...  
-
-	const Vector< Point3F > pointList = mGeometry.points;  
-
-	S32 base = plist->addPoint( pointList[0] );  
-
-	for ( S32 i = 1; i < pointList.size(); i++ )    
-		plist->addPoint( pointList[i] );  
-
-
-	// Add Surfaces...  
-
-	const Vector< ConvexShape::Face > faceList = mGeometry.faces;  
-
-	for ( S32 i = 0; i < faceList.size(); i++ )  
-	{  
-		const ConvexShape::Face &face = faceList[i];        
-
-		S32 s = face.triangles.size();  
-		for ( S32 j = 0; j < s; j++ )  
-		{  
-			plist->begin( 0, s*i + j );  
-
-			plist->plane( PlaneF( face.centroid, face.normal ) );  
-
-			plist->vertex( base + face.points[ face.triangles[j].p0 ] );  
-			plist->vertex( base + face.points[ face.triangles[j].p1 ] );  
-			plist->vertex( base + face.points[ face.triangles[j].p2 ] );  
-
-			plist->end();  
-		}        
-	}  
-
-	return true;  
+   if ( mGeometry.points.empty() )    
+      return false;  
+  
+   // If we're exporting deal with that first.  
+   if ( context == PLC_Export )  
+   {  
+      AssertFatal( dynamic_cast<OptimizedPolyList*>( plist ), "ConvexShape::buildPolyList - Bad polylist for export!" );  
+      _export( (OptimizedPolyList*)plist, box, sphere );  
+      return true;  
+   }  
+  
+   plist->setTransform( &mObjToWorld, mObjScale );  
+   plist->setObject( this );  
+  
+  
+   // Add points...  
+  
+   const Vector< Point3F > pointList = mGeometry.points;  
+  
+   S32 base = plist->addPoint( pointList[0] );  
+  
+   for ( S32 i = 1; i < pointList.size(); i++ )    
+      plist->addPoint( pointList[i] );  
+  
+  
+   // Add Surfaces...  
+  
+   const Vector< ConvexShape::Face > faceList = mGeometry.faces;  
+  
+   for ( S32 i = 0; i < faceList.size(); i++ )  
+   {  
+      const ConvexShape::Face &face = faceList[i];        
+  
+      S32 s = face.triangles.size();  
+      for ( S32 j = 0; j < s; j++ )  
+      {  
+         plist->begin( 0, s*i + j );  
+  
+         plist->plane( PlaneF( face.centroid, face.normal ) );  
+  
+         plist->vertex( base + face.points[ face.triangles[j].p0 ] );  
+         plist->vertex( base + face.points[ face.triangles[j].p1 ] );  
+         plist->vertex( base + face.points[ face.triangles[j].p2 ] );  
+  
+         plist->end();  
+      }        
+   }  
+  
+   return true;  
 }  
 
 void ConvexShape::_export( OptimizedPolyList *plist, const Box3F &box, const SphereF &sphere )

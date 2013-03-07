@@ -12,7 +12,7 @@
 #include "recast/DetourNavMeshQuery.h"
 
 namespace Nav {
-   static const U32 MaxPathLen = 99999999;
+   static const U32 MaxPathLen = 1024;
 
    class tQueryFilter : public dtQueryFilter {
       typedef dtQueryFilter Parent;
