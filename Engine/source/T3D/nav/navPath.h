@@ -136,7 +136,7 @@ namespace Nav {
          NextFreeMask = Parent::NextFreeMask << 1
       };
 
-   private:
+   public:
       /// Create appropriate data structures and stuff.
       bool init();
 

@@ -17,6 +17,7 @@
 #include "gfx/primBuilder.h"
 #include "core/stream/bitStream.h"
 #include "math/mathIO.h"
+#include "NavPathManager.h"
 
 #include "recast/DetourDebugDraw.h"
 
@@ -233,7 +234,10 @@ namespace Nav {
       resize();
 
       if(isServerObject())
-         plan();
+	  {
+		  NavPathManager::get().add(this);
+          plan();
+	  }
 
       addToScene();
 
