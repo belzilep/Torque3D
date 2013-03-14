@@ -99,7 +99,7 @@ GuiHealthBarHud::GuiHealthBarHud()
    mShowFrame = mShowFill = true;
    mDisplayEnergy = false;
    mFillColor.set(0, 0, 0, 0.5);
-   mFrameColor.set(0, 1, 0, 1);
+   mFrameColor.set(0, 0, 0, 0);
    mDamageFillColor.set(0, 1, 0, 1);
 
    mPulseRate = 0;
@@ -131,6 +131,12 @@ void GuiHealthBarHud::initPersistFields()
 
 
 //-----------------------------------------------------------------------------
+ColorF getColorHealth(int power)
+{
+	int r = (255*(100-power))/100;
+	int g = (255*power)/100;
+	return ColorF(r/255.0, g/255.0, 0.0);
+}
 /**
    Gui onRender method.
    Renders a health bar with filled background and border.
@@ -182,9 +188,11 @@ void GuiHealthBarHud::onRender(Point2I offset, const RectI &updateRect)
       rect.extent.y = (S32)(rect.extent.y * mValue);
       rect.point.y = bottomY - rect.extent.y;
    }
-   GFX->getDrawUtil()->drawRectFill(rect, mDamageFillColor);
+   GFX->getDrawUtil()->drawRectFill(rect, getColorHealth(control->getMaxDamage() - control->getDamageLevel()));
 
    // Border last
    if (mShowFrame)
       GFX->getDrawUtil()->drawRect(updateRect, mFrameColor);
 }
+
+
