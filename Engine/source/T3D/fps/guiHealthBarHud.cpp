@@ -131,6 +131,9 @@ void GuiHealthBarHud::initPersistFields()
 
 
 //-----------------------------------------------------------------------------
+/**
+	Change the color of the healthBar (from green to red)
+*/
 ColorF getColorHealth(int power)
 {
 	int r = (255*(100-power))/100;
