@@ -79,7 +79,8 @@ class SphereMesh
       TriangleMesh * createOctahedron();
       TriangleMesh * createIcosahedron();
 
-      Vector<TriangleMesh*>      mDetails;
+
+	  Vector<TriangleMesh*>      mDetails;
 
       void calcNormals(TriangleMesh *);
       TriangleMesh * subdivideMesh(TriangleMesh*);
