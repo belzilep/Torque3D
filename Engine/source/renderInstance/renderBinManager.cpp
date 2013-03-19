@@ -168,6 +168,9 @@ void RenderBinManager::setupSGData( MeshRenderInst *ri, SceneData &data )
    data.lightmap     = ri->lightmap;
    data.visibility   = ri->visibility;
    data.materialHint = ri->materialHint;
+   
+   // FlyingSquirrels //PLB
+   data.mTimer = ri->mTimer;
 }
 
 DefineEngineMethod( RenderBinManager, getBinType, const char*, (),,

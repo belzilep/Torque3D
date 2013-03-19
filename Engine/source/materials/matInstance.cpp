@@ -443,10 +443,10 @@ bool MatInstance::setupPass(SceneRenderState * state, const SceneData &sgData )
    return true;
 }
 
-void MatInstance::setTransforms(const MatrixSet &matrixSet, SceneRenderState *state)
+void MatInstance::setTransforms(const MatrixSet &matrixSet, SceneRenderState *state, const SceneData& sgData)
 {
    PROFILE_SCOPE(MatInstance_setTransforms);
-   mProcessedMaterial->setTransforms(matrixSet, state, getCurPass());
+   mProcessedMaterial->setTransforms(matrixSet, state, sgData, getCurPass());
 }
 
 void MatInstance::setSceneInfo(SceneRenderState * state, const SceneData& sgData)

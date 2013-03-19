@@ -49,7 +49,7 @@
 ///
 void ShaderConstHandles::init( GFXShader *shader, CustomMaterial* mat /*=NULL*/ )
 {
-	// FlyingSquirrels
+	// FlyingSquirrels //PLB
    mTimerSC = shader->getShaderConstHandle(ShaderGenVars::timer);
 
    mDiffuseColorSC = shader->getShaderConstHandle("$diffuseMaterialColor");
@@ -1000,11 +1000,6 @@ void ProcessedShaderMaterial::_setShaderConstants(SceneRenderState * state, cons
    shaderConsts->setSafe(handles->mParallaxInfoSC, mMaterial->mParallaxScale[stageNum]);   
    shaderConsts->setSafe(handles->mMinnaertConstantSC, mMaterial->mMinnaertConstant[stageNum]);
 
-   // FlyingSquirrels
-   if ( handles->mTimerSC->isValid() ) 
-	   shaderConsts->set( handles->mTimerSC, mMaterial->mTimer);  
-
-
    if ( handles->mSubSurfaceParamsSC->isValid() )
    {
       Point4F subSurfParams;
@@ -1101,7 +1096,7 @@ bool ProcessedShaderMaterial::_hasCubemap(U32 pass)
    return false;
 }
 
-void ProcessedShaderMaterial::setTransforms(const MatrixSet &matrixSet, SceneRenderState *state, const U32 pass)
+void ProcessedShaderMaterial::setTransforms(const MatrixSet &matrixSet, SceneRenderState *state, const SceneData& sgData, const U32 pass)
 {
    PROFILE_SCOPE( ProcessedShaderMaterial_setTransforms );
 
@@ -1135,6 +1130,10 @@ void ProcessedShaderMaterial::setTransforms(const MatrixSet &matrixSet, SceneRen
 
    if ( handles->m_vEyeSC->isValid() )
       shaderConsts->set( handles->m_vEyeSC, state->getVectorEye() );
+
+   // FlyingSquirrels //PLB
+   if ( handles->mTimerSC->isValid() ) 
+	   shaderConsts->set( handles->mTimerSC, sgData.mTimer);
 }
 
 void ProcessedShaderMaterial::setSceneInfo(SceneRenderState * state, const SceneData& sgData, U32 pass)

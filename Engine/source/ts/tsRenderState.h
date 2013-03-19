@@ -103,6 +103,9 @@ protected:
    /// are forward lit and need lights.
    LightQuery *mLightQuery;
 
+   // FlyingSquirrels //PLB
+   F32 mTimer;
+
 public:
 
    TSRenderState();
@@ -146,6 +149,10 @@ public:
    ///@see mLightQuery
    void setLightQuery( LightQuery *query ) { mLightQuery = query; }
    LightQuery* getLightQuery() const { return mLightQuery; }
+
+   // FlyingSquirrels //PLB
+   F32 getTimer() const { return mTimer; }
+   void setTimer( F32 timer ) { mTimer = timer; }
 
    /// @}
 };

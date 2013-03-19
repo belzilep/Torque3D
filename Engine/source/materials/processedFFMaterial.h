@@ -52,7 +52,7 @@ public:
    virtual MaterialParameterHandle* getMaterialParameterHandle(const String& name);
    virtual MaterialParameters* getDefaultMaterialParameters();      
    
-   virtual void setTransforms(const MatrixSet &matrixSet, SceneRenderState *state, const U32 pass);
+   virtual void setTransforms(const MatrixSet &matrixSet, SceneRenderState *state, const SceneData &sgData, const U32 pass);
 
    virtual void setSceneInfo(SceneRenderState *, const SceneData& sgData, U32 pass);
 

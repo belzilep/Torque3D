@@ -1062,7 +1062,7 @@ void ScatterSky::_renderMoon( ObjectRenderInst *ri, SceneRenderState *state, Bas
 
    while ( mMoonMatInst->setupPass( state, sgData ) )
    {
-      mMoonMatInst->setTransforms( *mMatrixSet, state );
+      mMoonMatInst->setTransforms( *mMatrixSet, state, sgData );
       mMoonMatInst->setSceneInfo( state, sgData );
 
       GFX->setVertexBuffer( vb );      

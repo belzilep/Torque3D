@@ -162,7 +162,7 @@ void RenderTerrainMgr::render( SceneRenderState *state )
             matrixSet.setWorld(*(*inst)->objectToWorldXfm);
 
             overideMat->setSceneInfo( state, sgData );
-            overideMat->setTransforms( matrixSet, state );
+            overideMat->setTransforms( matrixSet, state, sgData );
 
             GFX->drawPrimitive( (*inst)->prim );
          }

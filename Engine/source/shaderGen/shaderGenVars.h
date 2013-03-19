@@ -32,7 +32,7 @@
 ///
 struct ShaderGenVars
 {
-	// FlyingSquirrels
+	// FlyingSquirrels //PLB
 	const static String timer;
 
    const static String modelview;

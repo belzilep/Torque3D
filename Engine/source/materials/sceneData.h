@@ -91,6 +91,9 @@ struct SceneData
    /// features.
    void *materialHint;
 
+   // FlyingSquirrels //PLB
+   F32 mTimer;
+
    /// Constructor.
    SceneData() 
    { 

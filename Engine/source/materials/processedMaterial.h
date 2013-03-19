@@ -139,7 +139,7 @@ public:
    virtual void setTextureStages(SceneRenderState *, const SceneData &sgData, U32 pass ) = 0;
 
    /// Sets the transformation matrix, i.e. Model * View * Projection
-   virtual void setTransforms(const MatrixSet &matrixSet, SceneRenderState *state, const U32 pass) = 0;
+   virtual void setTransforms(const MatrixSet &matrixSet, SceneRenderState *state, const SceneData &sgData, const U32 pass) = 0;
    
    /// Sets the scene info like lights for the given pass.
    virtual void setSceneInfo(SceneRenderState *, const SceneData& sgData, U32 pass) = 0;
