@@ -298,8 +298,7 @@ SFXBuffer* SFXProfile::getBuffer()
    }
 
    if ( mBuffer.isNull() )
-      _preloadBuffer();
-
+	_preloadBuffer();
    return mBuffer;
 }
 
