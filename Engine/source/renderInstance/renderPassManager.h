@@ -364,6 +364,9 @@ struct MeshRenderInst : public RenderInst
    GFXTextureObject *miscTex;
    GFXCubemap   *cubemap;
 
+   // FlyingSquirrels //PLB
+   F32 mTimer;
+
    void clear();
 };
 

@@ -238,7 +238,7 @@ void RenderImposterMgr::_innerRender( const SceneRenderState *state, RenderPrePa
       while ( setupMat->setupPass( (SceneRenderState*)state, sgData ) )
       {
          setupMat->setSceneInfo( (SceneRenderState*)state, sgData );
-         setupMat->setTransforms( matrixSet, (SceneRenderState*)state );
+         setupMat->setTransforms( matrixSet, (SceneRenderState*)state, sgData );
 
          for ( ; i < binSize; )
          {

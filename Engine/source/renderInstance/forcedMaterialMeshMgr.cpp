@@ -106,7 +106,7 @@ void ForcedMaterialMeshMgr::render(SceneRenderState * state)
          getRenderPass()->getMatrixSet().setWorld(*passRI->objectToWorld);
          getRenderPass()->getMatrixSet().setView(*passRI->worldToCamera);
          getRenderPass()->getMatrixSet().setProjection(*passRI->projection);
-         mOverrideInstance->setTransforms(getRenderPass()->getMatrixSet(), state);
+         mOverrideInstance->setTransforms(getRenderPass()->getMatrixSet(), state, sgData);
 
          mOverrideInstance->setBuffers(passRI->vertBuff, passRI->primBuff);
          GFX->drawPrimitive( passRI->primBuffIndex );                  

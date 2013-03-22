@@ -191,7 +191,7 @@ void GuiHealthBarHud::onRender(Point2I offset, const RectI &updateRect)
       rect.extent.y = (S32)(rect.extent.y * mValue);
       rect.point.y = bottomY - rect.extent.y;
    }
-   GFX->getDrawUtil()->drawRectFill(rect, getColorHealth(control->getMaxDamage() - control->getDamageLevel()));
+   GFX->getDrawUtil()->drawRectFill(rect, getColorHealth(100 * mValue));
 
    // Border last
    if (mShowFrame)

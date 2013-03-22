@@ -508,7 +508,7 @@ void Sun::_renderCorona( ObjectRenderInst *ri, SceneRenderState *state, BaseMatI
 
    while ( mCoronaMatInst->setupPass( state, sgData ) )
    {
-      mCoronaMatInst->setTransforms( *mMatrixSet, state );
+      mCoronaMatInst->setTransforms( *mMatrixSet, state, sgData );
       mCoronaMatInst->setSceneInfo( state, sgData );
 
       GFX->setVertexBuffer( vb );      

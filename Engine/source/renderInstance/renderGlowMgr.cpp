@@ -196,7 +196,7 @@ void RenderGlowMgr::render( SceneRenderState *state )
             matrixSet.setWorld(*passRI->objectToWorld);
             matrixSet.setView(*passRI->worldToCamera);
             matrixSet.setProjection(*passRI->projection);
-            glowMat->setTransforms(matrixSet, state);
+            glowMat->setTransforms(matrixSet, state, sgData);
 
             glowMat->setSceneInfo(state, sgData);
             glowMat->setBuffers(passRI->vertBuff, passRI->primBuff);

@@ -147,7 +147,7 @@ public:
    /// This initializes the material transforms and should be 
    /// called after setupPass() within the pass loop.
    /// @see setupPass
-   virtual void setTransforms( const MatrixSet &matrixSet, SceneRenderState *state ) = 0;
+   virtual void setTransforms( const MatrixSet &matrixSet, SceneRenderState *state, const SceneData& sgData ) = 0;
 
    /// This initializes various material scene state settings and
    /// should be called after setupPass() within the pass loop.

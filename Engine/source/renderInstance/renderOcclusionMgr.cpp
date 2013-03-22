@@ -219,7 +219,7 @@ void RenderOcclusionMgr::render( SceneRenderState *state )
       xfm.scale( ri->scale );
 
       matrixSet.setWorld(xfm);
-      mMatInstance->setTransforms(matrixSet, state);
+      mMatInstance->setTransforms(matrixSet, state, sgData);
 
       if ( !smDebugRender )
          GFX->setStateBlock( mRenderSB );   

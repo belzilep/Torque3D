@@ -23,7 +23,7 @@
 #include "platform/platform.h"
 #include "shaderGen/shaderGenVars.h"
 
-// FlyingSquirrels
+// FlyingSquirrels //PLB
 const String ShaderGenVars::timer("$timer");
 
 const String ShaderGenVars::modelview("$modelview");

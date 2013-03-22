@@ -89,6 +89,9 @@ ConsoleDocClass( TSStatic,
 
 TSStatic::TSStatic()
 {
+	// FlyingSquirrels //PLB
+	mTimer = 0.0f;
+
    mNetFlags.set(Ghostable | ScopeAlways);
 
    mTypeMask |= StaticObjectType | StaticShapeObjectType;
@@ -198,6 +201,14 @@ void TSStatic::initPersistFields()
          "Forces rendering to a particular detail level." );
 
    endGroup("Debug");
+
+   // FlyingSquirrels //PLB
+   addGroup("Color Duty");
+
+   addField( "timer", TypeF32, Offset( mTimer, TSStatic ),
+	   "Timer used for our color platforms." );
+
+   endGroup("Color Duty");
 
    Parent::initPersistFields();
 }
@@ -514,6 +525,10 @@ void TSStatic::prepRenderImage( SceneRenderState* state )
    
    // Set up our TS render state.
    TSRenderState rdata;
+
+   // FlyingSquirrels //PLB
+   rdata.setTimer(mTimer);
+
    rdata.setSceneState( state );
    rdata.setFadeOverride( 1.0f );
    rdata.setOriginSort( mUseOriginSort );
@@ -601,6 +616,9 @@ U32 TSStatic::packUpdate(NetConnection *con, U32 mask, BitStream *stream)
 {
    U32 retMask = Parent::packUpdate(con, mask, stream);
 
+   // FlyingSquirrels //PLB
+   stream->write(mTimer);
+
    mathWrite( *stream, getTransform() );
    mathWrite( *stream, getScale() );
    stream->writeString( mShapeName );
@@ -632,6 +650,9 @@ U32 TSStatic::packUpdate(NetConnection *con, U32 mask, BitStream *stream)
 void TSStatic::unpackUpdate(NetConnection *con, BitStream *stream)
 {
    Parent::unpackUpdate(con, stream);
+
+   // FlyingSquirrels //PLB
+   stream->read(&mTimer);
 
    MatrixF mat;
    Point3F scale;

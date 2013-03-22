@@ -110,9 +110,6 @@ GFXCubemapHandle Material::smNormalizeCube;
 
 Material::Material()
 {
-	// FlyingSquirrels
-	mTimer = 0.0f;
-
    for( U32 i=0; i<MAX_STAGES; i++ )
    {
       mDiffuse[i].set( 1.0f, 1.0f, 1.0f, 1.0f );
@@ -200,9 +197,6 @@ Material::Material()
 
 void Material::initPersistFields()
 {
-	addField("timer", TypeF32, Offset(mTimer, Material),
-		"Utilise pour changer le time d'un material." );
-
    addField("mapTo", TypeRealString, Offset(mMapTo, Material),
       "Used to map this material to the material name used by TSShape." );
 

@@ -231,7 +231,7 @@ MaterialParameterHandle* ProcessedFFMaterial::getMaterialParameterHandle(const S
    return mDefaultHandle;
 }
 
-void ProcessedFFMaterial::setTransforms(const MatrixSet &matrixSet, SceneRenderState *state, const U32 pass)
+void ProcessedFFMaterial::setTransforms(const MatrixSet &matrixSet, SceneRenderState *state, const SceneData &sgData, const U32 pass)
 {
    GFX->setWorldMatrix(matrixSet.getObjectToWorld());
    GFX->setViewMatrix(matrixSet.getWorldToCamera());

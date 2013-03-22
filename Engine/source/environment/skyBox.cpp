@@ -216,7 +216,7 @@ void SkyBox::_renderObject( ObjectRenderInst *ri, SceneRenderState *state, BaseM
 
    while ( mMatInstance->setupPass( state, sgData ) )
    {         
-      mMatInstance->setTransforms( *mMatrixSet, state );
+      mMatInstance->setTransforms( *mMatrixSet, state, sgData );
       mMatInstance->setSceneInfo( state, sgData );
 
       GFX->drawPrimitive( GFXTriangleList, 0, mPrimCount );     
@@ -240,7 +240,7 @@ void SkyBox::_renderObject( ObjectRenderInst *ri, SceneRenderState *state, BaseM
 
       while ( mFogBandMatInst->setupPass( state, sgData ) )
       {
-         mFogBandMatInst->setTransforms( *mMatrixSet, state );
+         mFogBandMatInst->setTransforms( *mMatrixSet, state, sgData );
          mFogBandMatInst->setSceneInfo( state, sgData );
 
          GFX->setVertexBuffer( mFogBandVB );      

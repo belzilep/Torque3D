@@ -298,7 +298,7 @@ void RenderPrePassMgr::render( SceneRenderState *state )
    if ( mPrePassMatInstance )
    {
       matrixSet.setWorld(MatrixF::Identity);
-      mPrePassMatInstance->setTransforms(matrixSet, state);
+      mPrePassMatInstance->setTransforms(matrixSet, state, SceneData());
    }
 
    // Signal start of pre-pass
@@ -372,7 +372,7 @@ void RenderPrePassMgr::render( SceneRenderState *state )
             matrixSet.setProjection(*passRI->projection);
 
             mat->setSceneInfo(state, sgData);
-            mat->setTransforms(matrixSet, state);
+            mat->setTransforms(matrixSet, state, sgData);
 
             // If we're instanced then don't render yet.
             if ( mat->isInstanced() )

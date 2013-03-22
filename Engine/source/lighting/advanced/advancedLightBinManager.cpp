@@ -307,7 +307,7 @@ void AdvancedLightBinManager::render( SceneRenderState *state )
       while( vectorMatInfo->matInstance->setupPass( state, sgData ) )
       {
          vectorMatInfo->matInstance->setSceneInfo( state, sgData );
-         vectorMatInfo->matInstance->setTransforms( matrixSet, state );
+         vectorMatInfo->matInstance->setTransforms( matrixSet, state, sgData );
          GFX->drawPrimitive( GFXTriangleFan, 0, 2 );
       }
    }
@@ -344,7 +344,7 @@ void AdvancedLightBinManager::render( SceneRenderState *state )
       {
          // Set transforms
          matrixSet.setWorld(*sgData.objTrans);
-         curLightMat->matInstance->setTransforms(matrixSet, state);
+         curLightMat->matInstance->setTransforms(matrixSet, state, sgData);
          curLightMat->matInstance->setSceneInfo(state, sgData);
 
          if(curEntry.primBuffer)

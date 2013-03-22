@@ -165,6 +165,9 @@ void TSMesh::innerRender( TSMaterialList *materials, const TSRenderState &rdata,
    MeshRenderInst *coreRI = renderPass->allocInst<MeshRenderInst>();
    coreRI->type = RenderPassManager::RIT_Mesh;
 
+   // FlyingSquirrels //PLB
+   coreRI->mTimer = rdata.getTimer();
+
    const MatrixF &objToWorld = GFX->getWorldMatrix();
 
    // Sort by the center point or the bounds.

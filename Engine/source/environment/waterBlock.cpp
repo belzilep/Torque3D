@@ -484,7 +484,7 @@ void WaterBlock::innerRender( SceneRenderState *state )
       while ( mat->setupPass( state, sgData ) )
       {      
          mat->setSceneInfo(state, sgData);
-         mat->setTransforms(*mMatrixSet, state);
+         mat->setTransforms(*mMatrixSet, state, sgData);
          setCustomTextures( matIdx, mat->getCurPass(), matParams );
 
          for ( U32 i = 0; i < mVertBuffList.size(); i++ )

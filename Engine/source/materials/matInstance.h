@@ -64,7 +64,7 @@ public:
    virtual MaterialParameters* getMaterialParameters();
    virtual MaterialParameterHandle* getMaterialParameterHandle(const String& name);
    virtual bool setupPass(SceneRenderState *, const SceneData &sgData );
-   virtual void setTransforms(const MatrixSet &matrixSet, SceneRenderState *state);
+   virtual void setTransforms(const MatrixSet &matrixSet, SceneRenderState *state, const SceneData& sgData);
    virtual void setSceneInfo(SceneRenderState *, const SceneData& sgData);
    virtual void setTextureStages(SceneRenderState * state, const SceneData &sgData );
    virtual void setBuffers(GFXVertexBufferHandleBase* vertBuffer, GFXPrimitiveBufferHandle* primBuffer);

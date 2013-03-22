@@ -231,7 +231,7 @@ void RenderTranslucentMgr::render( SceneRenderState *state )
                matrixSet.setWorld(*passRI->objectToWorld);
                matrixSet.setView(*passRI->worldToCamera);
                matrixSet.setProjection(*passRI->projection);
-               mat->setTransforms(matrixSet, state);
+               mat->setTransforms(matrixSet, state, sgData);
 
                // If we're instanced then don't render yet.
                if ( mat->isInstanced() )

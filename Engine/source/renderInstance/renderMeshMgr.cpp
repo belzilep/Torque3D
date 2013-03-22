@@ -165,7 +165,7 @@ void RenderMeshMgr::render(SceneRenderState * state)
             matrixSet.setWorld(*passRI->objectToWorld);
             matrixSet.setView(*passRI->worldToCamera);
             matrixSet.setProjection(*passRI->projection);
-            mat->setTransforms(matrixSet, state);
+            mat->setTransforms(matrixSet, state, sgData);
 
             setupSGData( passRI, sgData );
             mat->setSceneInfo( state, sgData );
