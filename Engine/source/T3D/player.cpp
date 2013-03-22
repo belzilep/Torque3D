@@ -254,6 +254,7 @@ PlayerData::PlayerData()
    shadowProjectionDistance = 14.0f;
 
    renderFirstPerson = true;
+   isPuppet = false;
    firstPersonShadows = false;
 
    // Used for third person image rendering
@@ -1178,6 +1179,18 @@ void PlayerData::initPersistFields()
 
    endGroup( "Third Person" );
 
+   addGroup( "Inverse kinematics" );
+
+   addField( "isPuppet", TypeBool, Offset(isPuppet, PlayerData),
+	   "@brief Allow mounted images to request a sequence be played on the Player.\n\n"
+	   "When true a new thread is added to the player to allow for "
+	   "mounted images to request a sequence be played on the player "
+	   "through the image's state machine.  It is only optional so "
+	   "that we don't create a TSThread on the player if we don't "
+	   "need to.\n");
+
+   endGroup( "Inverse kinematics" );
+
    Parent::initPersistFields();
 }
 
@@ -1186,6 +1199,7 @@ void PlayerData::packData(BitStream* stream)
    Parent::packData(stream);
 
    stream->writeFlag(renderFirstPerson);
+   stream->writeFlag(isPuppet);
    stream->writeFlag(firstPersonShadows);
    
    stream->write(minLookAngle);
@@ -1368,6 +1382,7 @@ void PlayerData::unpackData(BitStream* stream)
    Parent::unpackData(stream);
 
    renderFirstPerson = stream->readFlag();
+   isPuppet = stream->readFlag();
    firstPersonShadows = stream->readFlag();
 
    stream->read(&minLookAngle);
@@ -2199,7 +2214,18 @@ void Player::advanceTime(F32 dt)
    // Client side animations
    Parent::advanceTime(dt);
    updateActionThread();
+
    updateAnimation(dt);
+
+   if (mDataBlock->isPuppet)
+   {
+	   updatePuppet(dt);
+   }
+   //else
+  // {
+	  
+   //}   
+
    updateSplash();
    updateFroth(dt);
    updateWaterSounds(dt);
@@ -6534,6 +6560,20 @@ DefineEngineMethod( Player, getNumDeathAnimations, S32, ( ),,
    return count;
 }
 
+DefineEngineMethod( Player, setPuppet, void, ( ),,
+	"@brief Get the number of death animations available to this player.\n\n"
+	"Death animations are assumed to be named death1-N using consecutive indices." )
+{
+	object->setPuppet();
+}
+
+DefineEngineMethod( Player, setKeyAnim, void, ( ),,
+	"@brief Get the number of death animations available to this player.\n\n"
+	"Death animations are assumed to be named death1-N using consecutive indices." )
+{
+	object->setKeyAnim();
+}
+
 //----------------------------------------------------------------------------
 void Player::consoleInit()
 {
@@ -6985,4 +7025,58 @@ void Player::renderConvex( ObjectRenderInst *ri, SceneRenderState *state, BaseMa
    GFX->enterDebugEvent( ColorI(255,0,255), "Player_renderConvex" );
    mConvex.renderWorkingList();
    GFX->leaveDebugEvent();
+}
+
+void Player::setPuppet(){  
+
+	//this method turns off node animations by setting   
+	//the animation state to "handsoff"  
+
+	TSShape * shape = mShapeInstance->getShape();      
+
+	//turn off node animations   
+	for (U32 i = 0; i < shape->nodes.size(); i++)
+	{  
+		if (shape->getNodeName(i) == String("Bip01 Head") ||
+			shape->getNodeName(i) == String("Bip01 Neck"))
+		{
+			mShapeInstance->setNodeAnimationState(i, mShapeInstance->MaskNodeHandsOff); 
+		}			
+	}  
+
+	//do other stuff specific to your needs  
+	mDataBlock->isPuppet=true;  //set the datablock flag  
+
+}
+
+void Player::setKeyAnim()
+{  
+
+	//this method restores animation states. it assumes you are not selectively setting  
+	//the mask for your own purposes. the default is MaskNodeAll (I think :)  
+	TSShape * shape = mShapeInstance->getShape();  
+
+	//turn back on the node animations      
+	for (U32 i=0;i<shape->nodes.size();i++){  
+		mShapeInstance->setNodeAnimationState(i, mShapeInstance->MaskNodeAll);  
+	}  
+
+	//do other stuff specific to your needs  
+	mDataBlock->isPuppet=false;   //un-set the datablock flag
+}
+
+void Player::updatePuppet(F32 dt)  
+{  
+	TSShape * shape = mShapeInstance->getShape();  
+
+	MatrixF mr;  
+	mr.set(EulerF (2 * 3.14f * dt, 0, 0));    //rotate 360 degs per sec??  
+
+	for (U32 i = 0; i < shape->nodes.size(); i++)
+	{
+		if (shape->getNodeName(i) == String("Bip01 Head"))
+		{
+			mShapeInstance->mNodeTransforms[i].mul(mr);
+		}		 
+	} 
 }

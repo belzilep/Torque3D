@@ -54,6 +54,8 @@ struct PlayerData: public ShapeBaseData {
    };
    bool renderFirstPerson;    ///< Render the player shape in first person
 
+   bool isPuppet;
+
    /// Render shadows while in first person when 
    /// renderFirstPerson is disabled.
    bool firstPersonShadows; 
@@ -778,6 +780,11 @@ public:
    virtual void prepRenderImage( SceneRenderState* state );
    virtual void renderConvex( ObjectRenderInst *ri, SceneRenderState *state, BaseMatInstance *overrideMat );   
    virtual void renderMountedImage( U32 imageSlot, TSRenderState &rstate, SceneRenderState *state );
+
+   // Fying Squirrels
+   void setPuppet();
+   void setKeyAnim();
+   void updatePuppet(F32 dt);  
 };
 
 typedef Player::Pose PlayerPose;
