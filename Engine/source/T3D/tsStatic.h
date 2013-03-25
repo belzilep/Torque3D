@@ -174,9 +174,6 @@ protected:
    F32 mRenderNormalScalar;
    S32 mForceDetail;
 
-   // Variables rajoutées par FlyingSquirrels //PLB
-   F32 mTimer;
-
 public:
 
    TSStatic();
