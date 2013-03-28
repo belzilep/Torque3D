@@ -767,6 +767,14 @@ class SceneObject : public NetObject, private SceneContainer::Link, public Proce
       static bool _setMountPID( void* object, const char* index, const char* data );
 
       /// @}
+
+	protected:
+		F32 currentTime_, timeMax_;
+		Point3F startPosition_, vecInterp_;
+	public:
+		void movePlatform(Point3F endPosition);
+		F32 getCurrentTime() const throw() { return currentTime_;}
+		F32 getTimeMax() const throw() { return timeMax_;}
 };
 
 #endif  // _SCENEOBJECT_H_
