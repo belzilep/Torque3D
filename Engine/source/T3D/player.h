@@ -214,6 +214,7 @@ struct PlayerData: public ShapeBaseData {
    Point3F crouchBoxSize;
    Point3F proneBoxSize;
    Point3F swimBoxSize;
+   Point3F deadBoxSize;
 
    /// Animation and other data initialized in onAdd
    struct ActionAnimationDef {
@@ -388,6 +389,7 @@ public:
       CrouchPose,
       PronePose,
       SwimPose,
+	  DeadPose,
       NumPoseBits = 3
    };
 
@@ -735,6 +737,7 @@ public:
    bool haveContact() const { return !mContactTimer; }         ///< Is it in contact with something
    void getMuzzlePointAI( U32 imageSlot, Point3F *point );
    F32 getMaxForwardVelocity() const { return (mDataBlock != NULL ? mDataBlock->maxForwardSpeed : 0); }
+   bool isDead();
 
    virtual bool    isDisplacable() const;
    virtual Point3F getMomentum() const;

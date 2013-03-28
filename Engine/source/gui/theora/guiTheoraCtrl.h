@@ -39,6 +39,7 @@
 /// Control to play back a Theora video file.
 class GuiTheoraCtrl : public GuiControl
 {
+
    public:
    
       typedef GuiControl Parent;
@@ -81,6 +82,9 @@ class GuiTheoraCtrl : public GuiControl
       
       /// Our background color.
       ColorI mBackgroundColor;
+
+	  // video Looping
+	  bool mIsLooping; 
 
    public:
    

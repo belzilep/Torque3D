@@ -369,6 +369,7 @@ PlayerData::PlayerData()
    crouchBoxSize.set(1.0f, 1.0f, 2.0f);
    proneBoxSize.set(1.0f, 2.3f, 1.0f);
    swimBoxSize.set(1.0f, 2.3f, 1.0f);
+   deadBoxSize.set(0.5f, 0.5f, 0.5f);
 
    // location of head, torso, legs
    boxHeadPercentage = 0.85f;
@@ -948,6 +949,9 @@ void PlayerData::initPersistFields()
       addField( "swimBoundingBox", TypePoint3F, Offset(swimBoxSize, PlayerData),
          "@brief Collision bounding box used when the player is swimming.\n\n"
          "@see boundingBox" );
+	  addField( "deadBoundingBox", TypePoint3F, Offset(deadBoxSize, PlayerData),
+		  "@brief Collision bounding box used when the player is swimming.\n\n"
+		  "@see boundingBox" );
 
       addField( "boxHeadPercentage", TypeF32, Offset(boxHeadPercentage, PlayerData),
          "@brief Percentage of the player's bounding box height that represents the head.\n\n"
@@ -1305,6 +1309,7 @@ void PlayerData::packData(BitStream* stream)
    mathWrite(*stream, crouchBoxSize);
    mathWrite(*stream, proneBoxSize);
    mathWrite(*stream, swimBoxSize);
+   mathWrite(*stream, deadBoxSize);
 
    if( stream->writeFlag( footPuffEmitter ) )
    {
@@ -1487,6 +1492,7 @@ void PlayerData::unpackData(BitStream* stream)
    mathRead(*stream, &crouchBoxSize);
    mathRead(*stream, &proneBoxSize);
    mathRead(*stream, &swimBoxSize);
+   mathRead(*stream, &deadBoxSize);
 
    if( stream->readFlag() )
    {
@@ -2471,6 +2477,9 @@ void Player::setPose( Pose pose )
       case SwimPose:
          boxSize = mDataBlock->swimBoxSize;
          break;
+	  case DeadPose:
+		  boxSize =  mDataBlock->deadBoxSize;
+		  break;
    }
 
    // Object and World Boxes...
@@ -3101,6 +3110,8 @@ void Player::updateMove(const Move* move)
       desiredPose = SprintPose;
    else if ( canStand() )
       desiredPose = StandPose;
+   else if ( isDead() )
+	   desiredPose = DeadPose;
 
    setPose( desiredPose );
 }
@@ -7081,7 +7092,15 @@ void Player::updatePuppet(F32 dt)
 	} 
 }
 
+
+/*
+ *	Retourne si le joueur est mort ou pas
+ *	Bizarrement sur torque, ils ont jamais pensé à le faire,
+ *	le nom de la variable qu'ils ont utilisé est horrible !
+ */
+//  [3/26/2013 belk2407] - Creation 
+
 bool Player::isDead()
 {
-	return mDamageState == Disabled;
+	return ( mDamageState == Disabled || mDamageState == Destroyed );
 }
