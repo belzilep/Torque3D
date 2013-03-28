@@ -43,6 +43,7 @@ class ShaderConstHandles
 public:
 	// FlyingSquirrels //PLB
    GFXShaderConstHandle* mTimerSC;
+   GFXShaderConstHandle* mScaleSC;
 
    GFXShaderConstHandle* mDiffuseColorSC;
    GFXShaderConstHandle* mToneMapTexSC;

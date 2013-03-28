@@ -7080,3 +7080,8 @@ void Player::updatePuppet(F32 dt)
 		}		 
 	} 
 }
+
+bool Player::isDead()
+{
+	return mDamageState == Disabled;
+}

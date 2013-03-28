@@ -34,6 +34,7 @@ struct ShaderGenVars
 {
 	// FlyingSquirrels //PLB
 	const static String timer;
+	const static String scale;
 
    const static String modelview;
    const static String worldViewOnly;

@@ -785,6 +785,8 @@ public:
    void setPuppet();
    void setKeyAnim();
    void updatePuppet(F32 dt);  
+
+   bool isDead();
 };
 
 typedef Player::Pose PlayerPose;

@@ -51,6 +51,7 @@ void ShaderConstHandles::init( GFXShader *shader, CustomMaterial* mat /*=NULL*/ 
 {
 	// FlyingSquirrels //PLB
    mTimerSC = shader->getShaderConstHandle(ShaderGenVars::timer);
+   mScaleSC = shader->getShaderConstHandle(ShaderGenVars::scale);
 
    mDiffuseColorSC = shader->getShaderConstHandle("$diffuseMaterialColor");
    mTexMatSC = shader->getShaderConstHandle(ShaderGenVars::texMat);
@@ -1134,6 +1135,8 @@ void ProcessedShaderMaterial::setTransforms(const MatrixSet &matrixSet, SceneRen
    // FlyingSquirrels //PLB
    if ( handles->mTimerSC->isValid() ) 
 	   shaderConsts->set( handles->mTimerSC, sgData.mTimer);
+   if ( handles->mScaleSC->isValid() ) 
+	   shaderConsts->set( handles->mScaleSC, matrixSet.getObjectToWorld().getScale());
 }
 
 void ProcessedShaderMaterial::setSceneInfo(SceneRenderState * state, const SceneData& sgData, U32 pass)
