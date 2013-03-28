@@ -1118,6 +1118,7 @@ protected:
    virtual void blowUp();
    virtual void onImpact(SceneObject* obj, VectorF vec);
    virtual void onImpact(VectorF vec);
+   virtual void onDisabled() {}; //  [3/26/2013 belk2407] - va etre appelee quand le joueur meurt, reimplementee dans la classe Player
    /// @}
 
    /// The inner prep render function that does the 

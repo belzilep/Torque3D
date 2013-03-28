@@ -1710,6 +1710,7 @@ void ShapeBase::setDamageState(DamageState state)
             break;
          case Disabled:
             mDataBlock->onDisabled_callback( this, lastState );
+			onDisabled(); //  [3/26/2013 belk2407] j'utilise ce callback dans la classe Player pour savoir quand le joueur meurt
             break;
          case Enabled:
             mDataBlock->onEnabled_callback( this, lastState );
