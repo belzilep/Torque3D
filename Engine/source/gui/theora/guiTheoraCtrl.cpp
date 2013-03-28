@@ -64,7 +64,7 @@ EndImplementEnumType;
 
 //-----------------------------------------------------------------------------
 
-GuiTheoraCtrl::GuiTheoraCtrl()
+GuiTheoraCtrl::GuiTheoraCtrl() 
 {
    mFilename         = StringTable->EmptyString();
    mDone             = false;
@@ -72,6 +72,7 @@ GuiTheoraCtrl::GuiTheoraCtrl()
    mMatchVideoSize   = true;
    mPlayOnWake       = true;
    mRenderDebugInfo  = false;
+   mIsLooping		 = false;  
    mTranscoder       = OggTheoraDecoder::TRANSCODER_Auto;
    
    mBackgroundColor.set( 0, 0, 0, 255);
@@ -100,6 +101,7 @@ void GuiTheoraCtrl::initPersistFields()
          "If true, displays an overlay on top of the video with useful debugging information." );
       addField( "transcoder",       TYPEID< OggTheoraDecoder::ETranscoder >(), Offset( mTranscoder,       GuiTheoraCtrl ),
          "The routine to use for Y'CbCr to RGB conversion." );
+	  addField( "isLooping", TypeBool, Offset( mIsLooping, GuiTheoraCtrl ) ); 
 
    endGroup( "Playback" );
 
@@ -192,6 +194,9 @@ void GuiTheoraCtrl::onSleep()
 
 void GuiTheoraCtrl::onRender(Point2I offset, const RectI &updateRect)
 {
+	if( mDone && mIsLooping )  
+		mTheoraTexture.play(); 
+
    const RectI rect(offset, getBounds().extent);
 
 	if( mTheoraTexture.isReady() )
