@@ -94,6 +94,7 @@ Signal< void( SceneObject* ) > SceneObject::smSceneObjectRemove;
 //-----------------------------------------------------------------------------
 
 SceneObject::SceneObject()
+	:currentTime_(0.0f), timeMax_(3.0f)
 {
    mContainer = 0;
    mTypeMask = DefaultObjectType;
@@ -140,6 +141,8 @@ SceneObject::SceneObject()
 
    mObjectFlags.set( RenderEnabledFlag | SelectionEnabledFlag );
    mIsScopeAlways = false;
+   startPosition_ = Point3F();
+   vecInterp_ = Point3F();
 }
 
 //-----------------------------------------------------------------------------
@@ -297,6 +300,8 @@ bool SceneObject::onAdd()
    resolveMountPID();
 
    smSceneObjectAdd.trigger(this);
+
+   startPosition_ = getPosition();
 
    return true;
 }
@@ -1431,4 +1436,32 @@ DefineEngineMethod( SceneObject, isGlobalBounds, bool, (),,
    "@return true if the object has a global bounds." )
 {
    return object->isGlobalBounds();
+}
+
+
+// test general MovePLatform  [3/27/2013 huba2301]
+template <class T>
+T clamp(const T& enter, const T& lower, const T& upper)
+{
+	return (enter > lower ? (enter < upper ? enter : upper) : lower);
+}
+
+void SceneObject::movePlatform(Point3F endPosition)
+{
+
+	currentTime_ += TickSec;
+	if (vecInterp_.isZero())
+	{
+		vecInterp_ = endPosition-startPosition_;
+	}
+	float PI = 3.1419f;
+	float t = currentTime_ / timeMax_;
+	double res = clamp(1 - (sin((1 - t) * PI/2.0)), 0.0, 1.0);
+	setPosition(startPosition_+vecInterp_*res);
+}
+
+DefineEngineMethod( SceneObject, movePlatform, bool, (Point3F endPosition), , "")
+{
+	object->movePlatform(endPosition);
+	return (object->getCurrentTime() >= object->getTimeMax());
 }
