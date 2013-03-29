@@ -142,6 +142,7 @@ SceneObject::SceneObject()
    mObjectFlags.set( RenderEnabledFlag | SelectionEnabledFlag );
    mIsScopeAlways = false;
    startPosition_ = Point3F();
+   endPosition_ = Point3F();
    vecInterp_ = Point3F();
 }
 
@@ -1448,20 +1449,41 @@ T clamp(const T& enter, const T& lower, const T& upper)
 
 void SceneObject::movePlatform(Point3F endPosition)
 {
-
-	currentTime_ += TickSec;
-	if (vecInterp_.isZero())
+	if (startPosition_ != endPosition_)
 	{
-		vecInterp_ = endPosition-startPosition_;
+		currentTime_ += TickSec;
+		if (vecInterp_.isZero())
+		{
+			endPosition_ = endPosition;
+			vecInterp_ = endPosition-startPosition_;
+		}
+		float PI = 3.1419f;
+		float t = currentTime_ / timeMax_;
+		double res = clamp(1 - (sin((1 - t) * PI/2.0)), 0.0, 1.0);
+		setPosition(startPosition_+vecInterp_*res);
 	}
-	float PI = 3.1419f;
-	float t = currentTime_ / timeMax_;
-	double res = clamp(1 - (sin((1 - t) * PI/2.0)), 0.0, 1.0);
-	setPosition(startPosition_+vecInterp_*res);
+	else
+	{
+		currentTime_ = timeMax_;
+	}
+}
+
+void SceneObject::resetCurrentTime()
+{
+	Con::printf(("ResetCurrentTime"));
+	currentTime_ = 0.0f;
+	startPosition_ = getPosition();
+	endPosition_.zero();
+	vecInterp_.zero();
 }
 
 DefineEngineMethod( SceneObject, movePlatform, bool, (Point3F endPosition), , "")
 {
 	object->movePlatform(endPosition);
 	return (object->getCurrentTime() >= object->getTimeMax());
+}
+
+DefineEngineMethod( SceneObject, resetCurrentTime, void, (), , "")
+{
+	object->resetCurrentTime();
 }
