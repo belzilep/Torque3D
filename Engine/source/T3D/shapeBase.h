@@ -1119,6 +1119,7 @@ protected:
    virtual void onImpact(SceneObject* obj, VectorF vec);
    virtual void onImpact(VectorF vec);
    virtual void onDisabled() {}; //  [3/26/2013 belk2407] - va etre appelee quand le joueur meurt, reimplementee dans la classe Player
+   virtual void onDamage(){};//  [3/29/2013 milh2802] - callback lorsqu'on recoit des degats
    /// @}
 
    /// The inner prep render function that does the 

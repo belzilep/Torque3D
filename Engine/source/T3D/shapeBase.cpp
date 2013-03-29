@@ -1250,6 +1250,7 @@ void ShapeBase::processTick(const Move* move)
       {
          updateDamageLevel();
          if (isServerObject()) {
+			 onDamage();
             setMaskBits(DamageMask);
             mDataBlock->onDamage_callback( this, mDamage - store );
          }
@@ -1558,7 +1559,8 @@ void ShapeBase::setDamageLevel(F32 damage)
 
       if (store != mDamage) {
          updateDamageLevel();
-         if (isServerObject()) {
+		 if (isServerObject()) {
+			 onDamage();
             setMaskBits(DamageMask);
             mDataBlock->onDamage_callback( this, mDamage - store );
          }
