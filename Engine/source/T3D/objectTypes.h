@@ -151,6 +151,10 @@ enum SceneObjectTypes
    /// @see PhysicalZone
    PhysicalZoneObjectType = BIT( 23 ),
 
+   /// An AI soldier object.
+   /// @see SoldierNPC
+   SoldierObjectType = BIT( 24 )
+
    /// @}
 };
 
