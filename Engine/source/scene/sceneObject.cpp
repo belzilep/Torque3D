@@ -1449,7 +1449,11 @@ T clamp(const T& enter, const T& lower, const T& upper)
 
 void SceneObject::movePlatform(Point3F endPosition)
 {
-	if (startPosition_ != endPosition_)
+	if (startPosition_ == endPosition_)
+	{
+		currentTime_ = timeMax_;
+		return;
+	}
 	{
 		currentTime_ += TickSec;
 		if (vecInterp_.isZero())
@@ -1461,10 +1465,6 @@ void SceneObject::movePlatform(Point3F endPosition)
 		float t = currentTime_ / timeMax_;
 		double res = clamp(1 - (sin((1 - t) * PI/2.0)), 0.0, 1.0);
 		setPosition(startPosition_+vecInterp_*res);
-	}
-	else
-	{
-		currentTime_ = timeMax_;
 	}
 }
 
