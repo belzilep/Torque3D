@@ -1136,3 +1136,8 @@ DefineEngineMethod( SimSet, acceptsAsChild, bool, ( SimObject* obj ),,
    
    return object->acceptsAsChild( obj );
 }
+
+DefineEngineMethod( SimGroup, isSimGroup, bool, (), , "" )
+{
+	return true;
+}
