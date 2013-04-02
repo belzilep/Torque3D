@@ -1098,10 +1098,12 @@ void Projectile::simulate( F32 dt )
    // Raycast the abstract PhysicsWorld if a PhysicsPlugin exists.
    bool hit = false;
 
+   // Not safe si le oldPosition et le newPosition sont égaux..
    if ( mPhysicsWorld )
-      hit = mPhysicsWorld->castRay( oldPosition, newPosition, &rInfo, Point3F( newPosition - oldPosition) * mDataBlock->impactForce );            
+	   hit = mPhysicsWorld->castRay( oldPosition, newPosition, &rInfo, Point3F( newPosition - oldPosition) * mDataBlock->impactForce );            
    else 
-      hit = getContainer()->castRay(oldPosition, newPosition, csmDynamicCollisionMask | csmStaticCollisionMask, &rInfo);
+	   hit = getContainer()->castRay(oldPosition, newPosition, csmDynamicCollisionMask | csmStaticCollisionMask, &rInfo);
+
 
    if ( hit )
    {
