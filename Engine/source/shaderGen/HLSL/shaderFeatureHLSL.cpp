@@ -2702,3 +2702,26 @@ void ImposterVertFeatureHLSL::determineFeature( Material *material,
       outFeatureData->features.addFeature( MFT_ImposterVert );
 }
 
+//****************************************************************************
+// FurFeatureHLSL
+//****************************************************************************
+//  [4/15/2013 belp1710]
+
+void FurFeatureHLSL::processPix( Vector<ShaderComponent*> &componentList, const MaterialFeatureData &fd )
+{
+	// search for color var
+	Var *color = (Var*) LangElement::find( getOutputTargetVarName(DefaultTarget) );
+
+	if ( !color )
+	{
+		// create color var
+		color = new Var;
+		color->setType( "fragout" );
+		color->setName( getOutputTargetVarName(DefaultTarget) );
+		color->setStructName( "OUT" );
+
+		output = new GenOp( "   @ = float4(1.0f, 1.0f, 1.0f, 1.0f);\r\n", color);
+	}
+
+	output = new GenOp( "   @ = float4(1.0f, 1.0f, 1.0f, 1.0f);\r\n", color);
+}

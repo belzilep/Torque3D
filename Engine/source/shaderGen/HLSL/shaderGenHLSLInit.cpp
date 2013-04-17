@@ -93,6 +93,9 @@ void _initShaderGenHLSL( ShaderGen *shaderGen )
    FEATUREMGR->registerFeature( MFT_ForwardShading, new NamedFeatureHLSL( "Forward Shaded Material" ) );
 
    FEATUREMGR->registerFeature( MFT_ImposterVert, new ImposterVertFeatureHLSL );
+
+   //  [4/16/2013 belp1710]
+   FEATUREMGR->registerFeature( MFT_Fur, new FurFeatureHLSL );
 }
 
 MODULE_BEGIN( ShaderGenHLSL )

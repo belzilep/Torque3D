@@ -205,6 +205,9 @@ public:
    FileName mDetailMapFilename[MAX_STAGES];
    FileName mNormalMapFilename[MAX_STAGES];
 
+   //  [4/16/2013 belp1710]
+   FileName mFurMapFilename[MAX_STAGES];
+
    FileName mSpecularMapFilename[MAX_STAGES];
 
    /// A second normal map which repeats at the detail map

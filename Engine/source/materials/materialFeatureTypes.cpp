@@ -58,6 +58,9 @@ ImplementFeatureType( MFT_Fog, MFG_PostProcess, 3.0f, true );
 
 ImplementFeatureType( MFT_HDROut, MFG_PostProcess, 999.0f, true );
 
+//  [4/15/2013 belp1710]
+ImplementFeatureType( MFT_Fur, MFG_Texture, 11.0f, true );
+
 ImplementFeatureType( MFT_IsDXTnm, U32(-1), -1, true );
 ImplementFeatureType( MFT_IsTranslucent, U32(-1), -1, true );
 ImplementFeatureType( MFT_IsTranslucentZWrite, U32(-1), -1, true );

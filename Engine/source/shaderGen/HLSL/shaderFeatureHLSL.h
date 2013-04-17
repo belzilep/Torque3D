@@ -651,4 +651,15 @@ public:
 };
 
 
+//  [4/15/2013 belp1710]
+class FurFeatureHLSL : public ShaderFeatureHLSL
+{
+public:
+	virtual String getName()
+	{
+		return "Fur";
+	}
+	virtual void processPix( Vector<ShaderComponent*> &componentList, const MaterialFeatureData &fd );
+};
+
 #endif // _SHADERGEN_HLSL_SHADERFEATUREHLSL_H_
