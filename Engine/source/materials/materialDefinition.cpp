@@ -193,6 +193,8 @@ Material::Material()
    
    mDirectSoundOcclusion = 1.f;
    mReverbSoundOcclusion = 1.0;
+
+   mHeatFactor = 0.0f;
 }
 
 void Material::initPersistFields()
@@ -281,6 +283,9 @@ void Material::initPersistFields()
 
       addField("glow", TypeBool, Offset(mGlow, Material), MAX_STAGES,
          "Enables rendering this material to the glow buffer." );
+
+      addField("heatFactor", TypeF32, Offset(mHeatFactor, Material),
+	     " Between 0 and 1, used to generate heat map for thermal vision" );
 
       addField("emissive", TypeBool, Offset(mEmissive, Material), MAX_STAGES,
          "Enables emissive lighting for the material." );

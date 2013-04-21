@@ -52,6 +52,7 @@ void ShaderConstHandles::init( GFXShader *shader, CustomMaterial* mat /*=NULL*/ 
 	// FlyingSquirrels //PLB
    mTimerSC = shader->getShaderConstHandle(ShaderGenVars::timer);
    mScaleSC = shader->getShaderConstHandle(ShaderGenVars::scale);
+   mHeatFactorSC = shader->getShaderConstHandle("$heatFactor");
 
    mDiffuseColorSC = shader->getShaderConstHandle("$diffuseMaterialColor");
    mTexMatSC = shader->getShaderConstHandle(ShaderGenVars::texMat);
@@ -1083,6 +1084,9 @@ void ProcessedShaderMaterial::_setShaderConstants(SceneRenderState * state, cons
          0.0f, 0.0f ); // TODO: Wrap mode flags?
       shaderConsts->setSafe(handles->mBumpAtlasTileSC, atlasTileParams);
    }
+
+   //  [4/12/2013 belk2407]
+   shaderConsts->setSafe( handles->mHeatFactorSC, mMaterial->mHeatFactor );
 }
 
 bool ProcessedShaderMaterial::_hasCubemap(U32 pass)

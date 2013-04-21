@@ -79,6 +79,7 @@ void _initShaderGenHLSL( ShaderGen *shaderGen )
    FEATUREMGR->registerFeature( MFT_EyeSpaceDepthOut, new EyeSpaceDepthOutHLSL() );
 
    FEATUREMGR->registerFeature( MFT_HDROut, new HDROutHLSL );
+   FEATUREMGR->registerFeature( MFT_HeatMap, new HeatMapFeatureHLSL );
 
    FEATUREMGR->registerFeature( MFT_ParaboloidVertTransform, new ParaboloidVertTransformHLSL );
    FEATUREMGR->registerFeature( MFT_IsSinglePassParaboloid, new NamedFeatureHLSL( "Single Pass Paraboloid" ) );

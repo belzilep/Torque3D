@@ -56,6 +56,7 @@ ImplementFeatureType( MFT_GlowMask, MFG_PostLighting, 1.0f, true );
 ImplementFeatureType( MFT_Visibility, MFG_PostLighting, 2.0f, true );
 ImplementFeatureType( MFT_Fog, MFG_PostProcess, 3.0f, true );
 
+ImplementFeatureType( MFT_HeatMap, MFG_PostProcess, 998.0f, true );
 ImplementFeatureType( MFT_HDROut, MFG_PostProcess, 999.0f, true );
 
 ImplementFeatureType( MFT_IsDXTnm, U32(-1), -1, true );

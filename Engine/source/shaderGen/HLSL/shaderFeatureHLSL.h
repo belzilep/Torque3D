@@ -182,6 +182,29 @@ public:
 };
 
 
+class HeatMapFeatureHLSL : public ShaderFeatureHLSL
+{
+protected:
+	String mFeatureName;
+
+public:
+	HeatMapFeatureHLSL()
+	{
+		char buffer[256];
+		dSprintf(buffer, sizeof(buffer), "Heat Map");
+		mFeatureName = buffer;
+	}
+
+	virtual String getName() { return mFeatureName; }
+
+	virtual void processVert( Vector<ShaderComponent*> &componentList,
+		const MaterialFeatureData &fd );
+
+	virtual void processPix( Vector<ShaderComponent*> &componentList, 
+		const MaterialFeatureData &fd );
+};
+
+
 /// Vertex position
 class VertPositionHLSL : public ShaderFeatureHLSL
 {

@@ -2385,6 +2385,55 @@ void RenderTargetZeroHLSL::processPix( Vector<ShaderComponent*> &componentList, 
    output = new GenOp( "   @;\r\n", assignColor( new GenOp( "0.00001" ), Material::None, NULL, mOutputTargetMask ) );
 }
 
+//****************************************************************************
+// HeatMap
+//****************************************************************************
+void HeatMapFeatureHLSL::processVert( Vector<ShaderComponent*> &componentList, 
+	const MaterialFeatureData &fd )
+{
+	MultiLine *meta = new MultiLine;
+	getOutTexCoord(   "texCoord", 
+		"float2", 
+		true, 
+		false, 
+		meta, 
+		componentList );
+	output = meta;
+}
+
+void HeatMapFeatureHLSL::processPix( Vector<ShaderComponent*> &componentList, 
+	const MaterialFeatureData &fd )
+{
+	MultiLine * meta = new MultiLine;
+
+	// Find the constant value
+	Var *heatFactor = (Var *)( LangElement::find("heatFactor") );
+	if( heatFactor == NULL )
+	{
+		heatFactor = new Var;
+		heatFactor->setType( "float" );
+		heatFactor->setName( "heatFactor" );
+		heatFactor->constSortPos = cspPotentialPrimitive;
+		heatFactor->uniform = true;
+	}
+
+	// Find output fragment
+	Var *color = (Var*) LangElement::find( getOutputTargetVarName(DefaultTarget) );
+	if ( !color )
+	{
+		color = new Var;
+		color->setType( "fragout" );
+		color->setName( getOutputTargetVarName(DefaultTarget) );
+		color->setStructName( "OUT" );
+		
+		//output = new GenOp( "   @.a = @;\r\n", color, heatFactor );
+	}
+
+	meta->addStatement(new GenOp( "   @.a = @;\r\n", color, heatFactor ));
+
+	output = meta;
+}
+
 
 //****************************************************************************
 // HDR Output

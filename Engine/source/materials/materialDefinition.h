@@ -333,6 +333,8 @@ public:
    ///@}
    
    String mMapTo; // map Material to this texture name
+
+   F32 mHeatFactor; //  [4/12/2013 belk2407] - between 0 and 1 for generating heat map for thermal vision
   
    ///
    /// Material interface

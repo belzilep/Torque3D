@@ -142,6 +142,9 @@ DeclareFeatureType( MFT_Fog );
 /// dynamic range color into the correct HDR encoded format.
 DeclareFeatureType( MFT_HDROut );
 
+/// This feature outputs white to RenderTarget0
+DeclareFeatureType( MFT_HeatMap );
+
 ///
 DeclareFeatureType( MFT_PrePassConditioner );
 DeclareFeatureType( MFT_InterlacedPrePass );
