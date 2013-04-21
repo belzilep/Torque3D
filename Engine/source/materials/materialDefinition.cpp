@@ -253,6 +253,10 @@ void Material::initPersistFields()
          "If this texture contains alpha information, the alpha channel of the texture will be used as the gloss map. "
          "This provides a per-pixel replacement for the 'specularPower' on the material" );
 
+	  //  [4/16/2013 belp1710]
+	  addField("furMap", TypeImageFilename, Offset(mFurMapFilename, Material), MAX_STAGES,
+		  "The fur texture map." );
+
       addField( "parallaxScale", TypeF32, Offset(mParallaxScale, Material), MAX_STAGES,
          "Enables parallax mapping and defines the scale factor for the parallax effect.  Typically "
          "this value is less than 0.4 else the effect breaks down." );

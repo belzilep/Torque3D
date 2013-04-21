@@ -173,5 +173,24 @@ DeclareFeatureType( MFT_ForwardShading );
 /// so that the rest of the material features can work on it.
 DeclareFeatureType( MFT_ImposterVert );
 
+//  [4/15/2013 belp1710]
+DeclareFeatureType( MFT_Fur );
+
+DeclareFeatureType( MFT_Layer0 );
+DeclareFeatureType( MFT_Layer1 );
+DeclareFeatureType( MFT_Layer2 );
+DeclareFeatureType( MFT_Layer3 );
+DeclareFeatureType( MFT_Layer4 );
+DeclareFeatureType( MFT_Layer5 );
+DeclareFeatureType( MFT_Layer6 );
+DeclareFeatureType( MFT_Layer7 );
+DeclareFeatureType( MFT_Layer8 );
+DeclareFeatureType( MFT_Layer9 );
+DeclareFeatureType( MFT_Layer10 );
+DeclareFeatureType( MFT_Layer11 );
+DeclareFeatureType( MFT_Layer12 );
+DeclareFeatureType( MFT_Layer13 );
+DeclareFeatureType( MFT_Layer14 );
+DeclareFeatureType( MFT_Layer15 );
 
 #endif // _MATERIALFEATURETYPES_H_

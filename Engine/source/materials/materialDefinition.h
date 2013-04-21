@@ -64,7 +64,7 @@ public:
    enum Constants
    {
       MAX_TEX_PER_PASS = 8,         ///< Number of textures per pass
-      MAX_STAGES = 4,
+      MAX_STAGES = 16,
       NUM_EFFECT_COLOR_STAGES = 2,  ///< Number of effect color definitions for transitioning effects.
    };
 
@@ -204,6 +204,9 @@ public:
    FileName mToneMapFilename[MAX_STAGES];
    FileName mDetailMapFilename[MAX_STAGES];
    FileName mNormalMapFilename[MAX_STAGES];
+
+   //  [4/16/2013 belp1710]
+   FileName mFurMapFilename[MAX_STAGES];
 
    FileName mSpecularMapFilename[MAX_STAGES];
 
