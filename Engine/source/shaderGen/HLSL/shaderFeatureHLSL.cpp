@@ -1622,7 +1622,7 @@ void VertPositionHLSL::processVert( Vector<ShaderComponent*> &componentList,
    if(fd.features.hasFeature(MFT_Fur) && mStage)
    {
 	   Var *normal = (Var*)LangElement::find( "normal" );
-	   String statement = "   @ += 0.005 * " + String::ToString(mStage) + " * @;\r\n";
+	   String statement = "   @ += 0.005 * " + String::ToString(mStage) + " * normalize(@);\r\n";
 	   meta->addStatement( new GenOp( statement, inPosition, normal ) );
    }
 
