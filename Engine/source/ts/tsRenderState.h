@@ -105,6 +105,7 @@ protected:
 
    // FlyingSquirrels //PLB
    F32 mTimer;
+   Point3F mActivationPos;
 
 public:
 
@@ -153,6 +154,8 @@ public:
    // FlyingSquirrels //PLB
    F32 getTimer() const { return mTimer; }
    void setTimer( F32 timer ) { mTimer = timer; }
+   const Point3F & getActivationPos() const { return mActivationPos; }
+   void setActivationPos( const Point3F & pos ) { mActivationPos = pos; }
 
    /// @}
 };

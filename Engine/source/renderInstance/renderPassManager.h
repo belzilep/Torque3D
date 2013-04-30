@@ -366,6 +366,7 @@ struct MeshRenderInst : public RenderInst
 
    // FlyingSquirrels //PLB
    F32 mTimer;
+   Point3F mActivationPos;
 
    void clear();
 };

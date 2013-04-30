@@ -25,6 +25,7 @@
 
 // FlyingSquirrels //PLB
 const String ShaderGenVars::timer("$timer");
+const String ShaderGenVars::activationPos("$activationPos");
 const String ShaderGenVars::scale("$scale");
 
 const String ShaderGenVars::modelview("$modelview");

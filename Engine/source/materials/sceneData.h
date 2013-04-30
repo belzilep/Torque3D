@@ -93,6 +93,7 @@ struct SceneData
 
    // FlyingSquirrels //PLB
    F32 mTimer;
+   Point3F mActivationPos;
 
    /// Constructor.
    SceneData() 
