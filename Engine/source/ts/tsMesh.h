@@ -286,9 +286,10 @@ class TSMesh
                         bool isSkinDirty,
                         const Vector<MatrixF> &transforms, 
                         TSVertexBufferHandle &vertexBuffer,
-                        GFXPrimitiveBufferHandle &primitiveBuffer );
+                        GFXPrimitiveBufferHandle &primitiveBuffer,
+						F32 factor = 1.0f);
 
-   void innerRender( TSMaterialList *, const TSRenderState &data, TSVertexBufferHandle &vb, GFXPrimitiveBufferHandle &pb );
+   void innerRender( TSMaterialList *, const TSRenderState &data, TSVertexBufferHandle &vb, GFXPrimitiveBufferHandle &pb, F32 factor = 1.0f );
 
    /// @}
 
@@ -519,7 +520,8 @@ public:
                   bool isSkinDirty,
                   const Vector<MatrixF> &transforms, 
                   TSVertexBufferHandle &vertexBuffer,
-                  GFXPrimitiveBufferHandle &primitiveBuffer );
+                  GFXPrimitiveBufferHandle &primitiveBuffer,
+				  F32 factor = 1.0f);
 
    // collision methods...
    bool buildPolyList( S32 frame, AbstractPolyList *polyList, U32 &surfaceKey, TSMaterialList *materials );

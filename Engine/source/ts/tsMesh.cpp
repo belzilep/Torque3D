@@ -136,7 +136,8 @@ void TSMesh::render( TSMaterialList *materials,
                      bool isSkinDirty,
                      const Vector<MatrixF> &transforms, 
                      TSVertexBufferHandle &vertexBuffer,
-                     GFXPrimitiveBufferHandle &primitiveBuffer )
+                     GFXPrimitiveBufferHandle &primitiveBuffer,
+					 F32 factor)
 {
    // These are only used by TSSkinMesh.
    TORQUE_UNUSED( isSkinDirty );   
@@ -145,13 +146,14 @@ void TSMesh::render( TSMaterialList *materials,
    TORQUE_UNUSED( primitiveBuffer );
 
    // Pass our shared VB.
-   innerRender( materials, rdata, mVB, mPB );
+   innerRender( materials, rdata, mVB, mPB, factor );
 }
 
-void TSMesh::innerRender( TSMaterialList *materials, const TSRenderState &rdata, TSVertexBufferHandle &vb, GFXPrimitiveBufferHandle &pb )
+void TSMesh::innerRender( TSMaterialList *materials, const TSRenderState &rdata, TSVertexBufferHandle &vb, GFXPrimitiveBufferHandle &pb, F32 factor)
 {
    PROFILE_SCOPE( TSMesh_InnerRender );
 
+   
    if( vertsPerFrame <= 0 ) 
       return;
 
@@ -165,13 +167,19 @@ void TSMesh::innerRender( TSMaterialList *materials, const TSRenderState &rdata,
    MeshRenderInst *coreRI = renderPass->allocInst<MeshRenderInst>();
    coreRI->type = RenderPassManager::RIT_Mesh;
 
+   // FlyingSquirrels //AH
+   TSRenderState rdata1 = rdata;
+   rdata1.setFactorAlphaLOD(factor);
+   rdata1.setSceneState(state);
    // FlyingSquirrels //PLB
-   coreRI->mTimer = rdata.getTimer();
+   coreRI->mTimer = rdata1.getTimer();
+   coreRI->mFactorAlphaLOD = rdata1.getFactorAlphaLOD();
 
    const MatrixF &objToWorld = GFX->getWorldMatrix();
+   
 
    // Sort by the center point or the bounds.
-   if ( rdata.useOriginSort() )
+   if ( rdata1.useOriginSort() )
       coreRI->sortDistSq = ( objToWorld.getPosition() - state->getCameraPosition() ).lenSquared();
    else
    {
@@ -208,10 +216,10 @@ void TSMesh::innerRender( TSMaterialList *materials, const TSRenderState &rdata,
    coreRI->primBuff = &pb;
    coreRI->defaultKey2 = (U32) coreRI->vertBuff;
 
-   coreRI->materialHint = rdata.getMaterialHint();
+   coreRI->materialHint = rdata1.getMaterialHint();
 
    coreRI->visibility = meshVisibility;  
-   coreRI->cubemap = rdata.getCubemap();
+   coreRI->cubemap = rdata1.getCubemap();
 
    // NOTICE: SFXBB is removed and refraction is disabled!
    //coreRI->backBuffTex = GFX->getSfxBackBuffer();
@@ -258,8 +266,8 @@ void TSMesh::innerRender( TSMaterialList *materials, const TSRenderState &rdata,
 
       // If the material needs lights then gather them
       // here once and set them on the core render inst.
-      if ( matInst->isForwardLit() && !coreRI->lights[0] && rdata.getLightQuery() )
-         rdata.getLightQuery()->getLights( coreRI->lights, 8 );
+      if ( matInst->isForwardLit() && !coreRI->lights[0] && rdata1.getLightQuery() )
+         rdata1.getLightQuery()->getLights( coreRI->lights, 8 );
 
       MeshRenderInst *ri = renderPass->allocInst<MeshRenderInst>();
       *ri = *coreRI;
@@ -276,7 +284,7 @@ void TSMesh::innerRender( TSMaterialList *materials, const TSRenderState &rdata,
       }
 
       renderPass->addInst( ri );
-   }
+   }   
 }
 
 const Point3F * TSMesh::getNormals( S32 firstVert )
@@ -1467,7 +1475,8 @@ void TSSkinMesh::render(   TSMaterialList *materials,
                            bool isSkinDirty,
                            const Vector<MatrixF> &transforms, 
                            TSVertexBufferHandle &vertexBuffer,
-                           GFXPrimitiveBufferHandle &primitiveBuffer )
+                           GFXPrimitiveBufferHandle &primitiveBuffer,
+						   F32 factor)
 {
    PROFILE_SCOPE(TSSkinMesh_render);
 
@@ -1496,7 +1505,7 @@ void TSSkinMesh::render(   TSMaterialList *materials,
    }
 
    // render...
-   innerRender( materials, rdata, vertexBuffer, primitiveBuffer );   
+   innerRender( materials, rdata, vertexBuffer, primitiveBuffer, factor );   
 }
 
 bool TSSkinMesh::buildPolyList( S32 frame, AbstractPolyList *polyList, U32 &surfaceKey, TSMaterialList *materials )

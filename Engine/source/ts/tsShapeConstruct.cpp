@@ -1388,6 +1388,28 @@ DefineTSShapeConstructorMethod( addMesh, bool, ( const char* meshName, const cha
    return true;
 }}
 
+DefineTSShapeConstructorMethod( addMeshTest, bool, ( const char* meshName, const char* srcShape, const char* srcMesh, U32 beginTransition ),,
+	( meshName, srcShape, srcMesh, beginTransition ), false, "test")
+{
+	// Load the shape source file
+	char filenameBuf[1024];
+	Con::expandScriptFilename(filenameBuf, sizeof(filenameBuf), srcShape);
+
+	Resource<TSShape> hSrcShape = ResourceManager::get().load( filenameBuf );
+	if ( !bool(hSrcShape) )
+	{
+		Con::errorf( "addMesh failed: Could not load source shape: '%s'", filenameBuf );
+		return false;
+	}
+
+	TSShape* shape = const_cast<TSShape*>( (const TSShape*)hSrcShape );
+	if ( !mShape->addMesh( shape, srcMesh, meshName, beginTransition ) )
+		return false;
+
+	ADD_TO_CHANGE_SET();
+	return true;
+}}
+
 DefineTSShapeConstructorMethod( removeMesh, bool, ( const char* name ),,
    ( name ), false,
    "Remove a mesh from the shape.\n"

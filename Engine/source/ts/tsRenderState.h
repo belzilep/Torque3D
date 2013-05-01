@@ -105,6 +105,8 @@ protected:
 
    // FlyingSquirrels //PLB
    F32 mTimer;
+   // FlyingSquirrels //AH
+   F32 mFactorAlphaLOD;
 
 public:
 
@@ -153,6 +155,9 @@ public:
    // FlyingSquirrels //PLB
    F32 getTimer() const { return mTimer; }
    void setTimer( F32 timer ) { mTimer = timer; }
+   // FlyingSquirrels //AH
+   F32 getFactorAlphaLOD() const { return mFactorAlphaLOD; }
+   void setFactorAlphaLOD( F32 factorAlphaLOD ) { mFactorAlphaLOD = factorAlphaLOD; }
 
    /// @}
 };

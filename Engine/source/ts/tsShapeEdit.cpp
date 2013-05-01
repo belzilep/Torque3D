@@ -168,105 +168,109 @@ S32 TSShape::addDetail(const String& dname, S32 size, S32 subShapeNum)
    return index;
 }
 
-S32 TSShape::addImposter(const String& cachePath, S32 size, S32 numEquatorSteps,
-                        S32 numPolarSteps, S32 dl, S32 dim, bool includePoles, F32 polarAngle)
-{
-   // Check if the desired size is already in use
-   bool isNewDetail = false;
-   S32 detIndex = findDetailBySize( size );
-
-   if ( detIndex >= 0 )
-   {
-      // Size is in use. If the detail is already an imposter, we can just change
-      // the settings, otherwise quit
-      if ( details[detIndex].subShapeNum >= 0 )
-      {
-         Con::errorf( "TSShape::addImposter: A non-billboard detail already "
-            "exists at size %d", size );
-         return -1;
-      }
-   }
-   else
-   {
-      // Size is not in use. If an imposter already exists, change its size, otherwise
-      // create a new detail
-      for ( detIndex = 0; detIndex < details.size(); ++detIndex )
-      {
-         if ( details[detIndex].subShapeNum < 0 )
-         {
-            // Change the imposter detail size
-            setDetailSize( details[detIndex].size, size );
-            break;
-         }
-      }
-      if ( detIndex == details.size() )
-      {
-         isNewDetail = true;
-         detIndex = addDetail( "bbDetail", size, -1 );
-      }
-   }
-
-   // Now set the billboard properties.
-   Detail &detail = details[detIndex];
-
-   // In prior to DTS version 26 we would pack the autobillboard
-   // into this single 32bit value.  This was prone to overflows
-   // of parameters caused random bugs.
-   //
-   // Set the old autobillboard properties var to zero.
-   detail.objectDetailNum = 0;
-   
-   // We now use the new vars.
-   detail.bbEquatorSteps = numEquatorSteps;
-   detail.bbPolarSteps = numPolarSteps;
-   detail.bbPolarAngle = polarAngle;
-   detail.bbDetailLevel = dl;
-   detail.bbDimension = dim;
-   detail.bbIncludePoles = includePoles;
-
-   // Rebuild billboard details or force an update of the modified detail
-   if ( isNewDetail )
-   {
-      // Add NULL meshes for this detail
-      for ( S32 iObj = 0; iObj < objects.size(); ++iObj )
-      {
-         if ( detIndex < objects[iObj].numMeshes )
-         {
-            objects[iObj].numMeshes++;
-            meshes.insert( objects[iObj].startMeshIndex + detIndex, NULL );
-            for (S32 j = iObj + 1; j < objects.size(); ++j )
-               objects[j].startMeshIndex++;
-         }
-      }
-
-      // Could be dedicated server.
-      if ( GFXDevice::devicePresent() )
-         setupBillboardDetails( cachePath );
-
-      while ( detailCollisionAccelerators.size() < details.size() )
-         detailCollisionAccelerators.push_back( NULL );
-   }
-   else
-   {
-      if ( billboardDetails.size() && GFXDevice::devicePresent() )
-      {
-         delete billboardDetails[detIndex];
-         billboardDetails[detIndex] = new TSLastDetail(
-                                          this,
-                                          cachePath,
-                                          detail.bbEquatorSteps,
-                                          detail.bbPolarSteps,
-                                          detail.bbPolarAngle,
-                                          detail.bbIncludePoles,
-                                          detail.bbDetailLevel,
-                                          detail.bbDimension );
-
-         billboardDetails[detIndex]->update( true );
-      }
-   }
-
-   return detIndex;
-}
+S32 TSShape::addImposter(const String& cachePath, S32 size, S32 numEquatorSteps,  
+                        S32 numPolarSteps, S32 dl, S32 dim, bool includePoles, F32 polarAngle)  
+{  
+   // Check if the desired size is already in use  
+   bool isNewDetail = false;  
+   S32 detIndex = findDetailBySize( size );  
+  
+   if ( detIndex >= 0 )  
+   {  
+      // Size is in use. If the detail is already an imposter, we can just change  
+      // the settings, otherwise quit  
+      if ( details[detIndex].subShapeNum >= 0 )  
+      {  
+         Con::errorf( "TSShape::addImposter: A non-billboard detail already "  
+            "exists at size %d", size );  
+         return -1;  
+      }  
+   }  
+   else  
+   {  
+      // Size is not in use. If an imposter already exists, change its size, otherwise  
+      // create a new detail  
+      for ( detIndex = 0; detIndex < details.size(); ++detIndex )  
+      {  
+         if ( details[detIndex].subShapeNum < 0 )  
+         {  
+            // Change the imposter detail size  
+            setDetailSize( details[detIndex].size, size );  
+            break;  
+         }  
+      }  
+      if ( detIndex == details.size() )  
+      {  
+         isNewDetail = true;  
+         detIndex = addDetail( "bbDetail", size, -1 );  
+      }  
+   }  
+  
+   // Now set the billboard properties.  
+   Detail &detail = details[detIndex];  
+  
+   // In prior to DTS version 26 we would pack the autobillboard  
+   // into this single 32bit value.  This was prone to overflows  
+   // of parameters caused random bugs.  
+   //  
+   // Set the old autobillboard properties var to zero.  
+   detail.objectDetailNum = 0;  
+     
+   // We now use the new vars.  
+   detail.bbEquatorSteps = numEquatorSteps;  
+   detail.bbPolarSteps = numPolarSteps;  
+   detail.bbPolarAngle = polarAngle;  
+   detail.bbDetailLevel = dl;  
+   detail.bbDimension = dim;  
+   detail.bbIncludePoles = includePoles;  
+   detail.polyCount = 2;  
+  
+   // Rebuild billboard details or force an update of the modified detail  
+   if ( isNewDetail )  
+   {  
+      // Add NULL meshes for this detail  
+      for ( S32 iObj = 0; iObj < objects.size(); ++iObj )  
+      {  
+         if ( detIndex < objects[iObj].numMeshes )  
+         {  
+            objects[iObj].numMeshes++;  
+            meshes.insert( objects[iObj].startMeshIndex + detIndex, NULL );  
+            for (S32 j = iObj + 1; j < objects.size(); ++j )  
+               objects[j].startMeshIndex++;  
+         }  
+      }  
+  
+      // Could be dedicated server.  
+      if ( GFXDevice::devicePresent() )  
+         setupBillboardDetails( cachePath );  
+  
+      while ( detailCollisionAccelerators.size() < details.size() )  
+         detailCollisionAccelerators.push_back( NULL );  
+   }  
+   else  
+   {  
+      if ( billboardDetails.size() && GFXDevice::devicePresent() )  
+      {  
+         delete billboardDetails[detIndex];  
+         billboardDetails[detIndex] = new TSLastDetail(  
+                                          this,  
+                                          cachePath,  
+                                          detail.bbEquatorSteps,  
+                                          detail.bbPolarSteps,  
+                                          detail.bbPolarAngle,  
+                                          detail.bbIncludePoles,  
+                                          detail.bbDetailLevel,  
+                                          detail.bbDimension );  
+  
+         billboardDetails[detIndex]->update( true );  
+      }  
+   }  
+  
+   // Re-initialize the shape  
+   init();  
+  
+   return detIndex;  
+}  
 
 bool TSShape::removeImposter()
 {
@@ -1123,9 +1127,20 @@ bool TSShape::addMesh(TSShape* srcShape, const String& srcMeshName, const String
          }
       }
    }
-
+   
    return true;
 }
+
+// FlyingSquirrels //AH
+bool TSShape::addMesh(TSShape* srcShape, const String& srcMeshName, const String& meshName, U32 beginTransition)
+{
+	transitionTime_.emplace_back(beginTransition);
+
+	lodRenderDetail_ = Detailled;
+	//Con::printf("----------- Je suis dans la fonction AddMesh et beginTransition : %i, et endTransition : %i", beginTransition);
+	return addMesh(srcShape, srcMeshName, meshName);
+}
+
 
 bool TSShape::setMeshSize(const String& meshName, S32 size)
 {

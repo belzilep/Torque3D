@@ -772,6 +772,7 @@ class SceneObject : public NetObject, private SceneContainer::Link, public Proce
 		F32 currentTime_, timeMax_;
 		Point3F startPosition_, endPosition_, vecInterp_;
 	public:
+		// FlyingSquirrels // AH
 		void movePlatform(Point3F endPosition);
 		F32 getCurrentTime() const throw() { return currentTime_;}
 		F32 getTimeMax() const throw() { return timeMax_;}

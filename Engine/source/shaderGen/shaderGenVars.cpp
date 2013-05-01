@@ -26,6 +26,8 @@
 // FlyingSquirrels //PLB
 const String ShaderGenVars::timer("$timer");
 const String ShaderGenVars::scale("$scale");
+// FlyingSquirrels //AH
+const String ShaderGenVars::factorAlphaLOD("$factorAlphaLOD");
 
 const String ShaderGenVars::modelview("$modelview");
 const String ShaderGenVars::worldViewOnly("$worldViewOnly");

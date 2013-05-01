@@ -52,6 +52,8 @@ void ShaderConstHandles::init( GFXShader *shader, CustomMaterial* mat /*=NULL*/ 
 	// FlyingSquirrels //PLB
    mTimerSC = shader->getShaderConstHandle(ShaderGenVars::timer);
    mScaleSC = shader->getShaderConstHandle(ShaderGenVars::scale);
+   // FlyingSquirrels //AH
+   mFactorAlphaLODSC = shader->getShaderConstHandle(ShaderGenVars::factorAlphaLOD);
 
    mDiffuseColorSC = shader->getShaderConstHandle("$diffuseMaterialColor");
    mTexMatSC = shader->getShaderConstHandle(ShaderGenVars::texMat);
@@ -1083,6 +1085,7 @@ void ProcessedShaderMaterial::_setShaderConstants(SceneRenderState * state, cons
          0.0f, 0.0f ); // TODO: Wrap mode flags?
       shaderConsts->setSafe(handles->mBumpAtlasTileSC, atlasTileParams);
    }
+
 }
 
 bool ProcessedShaderMaterial::_hasCubemap(U32 pass)
@@ -1137,6 +1140,9 @@ void ProcessedShaderMaterial::setTransforms(const MatrixSet &matrixSet, SceneRen
 	   shaderConsts->set( handles->mTimerSC, sgData.mTimer);
    if ( handles->mScaleSC->isValid() ) 
 	   shaderConsts->set( handles->mScaleSC, matrixSet.getObjectToWorld().getScale());
+   // FlyingSquirrels // AH
+   if ( handles->mFactorAlphaLODSC->isValid())
+	   shaderConsts->set( handles->mFactorAlphaLODSC, sgData.mFactorAlphaLOD);
 }
 
 void ProcessedShaderMaterial::setSceneInfo(SceneRenderState * state, const SceneData& sgData, U32 pass)

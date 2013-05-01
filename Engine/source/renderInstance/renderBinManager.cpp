@@ -171,6 +171,8 @@ void RenderBinManager::setupSGData( MeshRenderInst *ri, SceneData &data )
    
    // FlyingSquirrels //PLB
    data.mTimer = ri->mTimer;
+   // FlyingSquirrels //AH
+   data.mFactorAlphaLOD = ri->mFactorAlphaLOD;
 }
 
 DefineEngineMethod( RenderBinManager, getBinType, const char*, (),,

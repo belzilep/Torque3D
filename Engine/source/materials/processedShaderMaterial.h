@@ -44,6 +44,9 @@ public:
 	// FlyingSquirrels //PLB
    GFXShaderConstHandle* mTimerSC;
    GFXShaderConstHandle* mScaleSC;
+   // Flying Squirrels //AH
+   GFXShaderConstHandle* mFactorAlphaLODSC;
+
 
    GFXShaderConstHandle* mDiffuseColorSC;
    GFXShaderConstHandle* mToneMapTexSC;

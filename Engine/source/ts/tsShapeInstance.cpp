@@ -38,6 +38,7 @@
 #include "gfx/primBuilder.h"
 #include "gfx/gfxDrawUtil.h"
 #include "core/module.h"
+#include "T3D/gameBase/gameConnection.h"
 
 
 MODULE_BEGIN( TSShapeInstance )
@@ -120,6 +121,8 @@ TSShapeInstance::TSShapeInstance( const Resource<TSShape> &shape, bool loadMater
    mShapeResource = shape;
    mShape = mShapeResource;
    buildInstanceData( mShape, loadMaterials );
+   lodRendered_ = 0;
+   isInTransitionLOD_ = false;
 }
 
 TSShapeInstance::TSShapeInstance( TSShape *shape, bool loadMaterials )
@@ -137,6 +140,8 @@ TSShapeInstance::TSShapeInstance( TSShape *shape, bool loadMaterials )
    mShapeResource = NULL;
    mShape = shape;
    buildInstanceData( mShape, loadMaterials );
+   lodRendered_ = 0;
+   isInTransitionLOD_ = false;
 }
 
 TSShapeInstance::~TSShapeInstance()
@@ -431,6 +436,7 @@ void TSShapeInstance::listMeshes( const String &state ) const
    }
 }
 
+
 void TSShapeInstance::render( const TSRenderState &rdata )
 {
    if (mCurrentDetailLevel<0)
@@ -448,37 +454,121 @@ void TSShapeInstance::render( const TSRenderState &rdata )
    F32 alphaIn  = mShape->alphaIn[mCurrentDetailLevel];
    F32 saveAA = mAlphaAlways ? mAlphaAlwaysValue : 1.0f;
 
-   /// This first case is the single detail level render.
-   if ( mCurrentIntraDetailLevel > alphaIn + alphaOut )
-      render( rdata, mCurrentDetailLevel, mCurrentIntraDetailLevel );
-   else if ( mCurrentIntraDetailLevel > alphaOut )
-   {
-      // draw this detail level w/ alpha=1 and next detail level w/
-      // alpha=1-(intraDl-alphaOut)/alphaIn
 
-      // first draw next detail level
-      if ( mCurrentDetailLevel + 1 < mShape->details.size() && mShape->details[ mCurrentDetailLevel + 1 ].size > 0.0f )
-      {
-         setAlphaAlways( saveAA * ( alphaIn + alphaOut - mCurrentIntraDetailLevel ) / alphaIn );
-         render( rdata, mCurrentDetailLevel + 1, 0.0f );
-      }
+   F32 factor = 1.0;
+   //Con::printf("Est ce que c'est vrai ? %i", mShape->getLODRenderDetail() == TSShape::Detailled);
+   // Trouver la bonne transition si il existe un LOD
+	if ( mCurrentDetailLevel < mShape->getTransitionTime().size() - 1 )
+	{
 
-      setAlphaAlways( saveAA );
-      render( rdata, mCurrentDetailLevel, mCurrentIntraDetailLevel );
-   }
+		// ENFIN TROUVÉ CETTE POSITION !!!
+		const MatrixF &objToWorld = GFX->getWorldMatrix();
+		Point3F posObj = objToWorld.getPosition();
+		//Con::printf("Position dasdasdaeawdsd ? %f %f %f", posObj.x, posObj.y, posObj.z);
+		/**** Test pour trouver la position de la caméra *********/
+		// get the projected size...
+		GameConnection* connection = GameConnection::getConnectionToServer();
+		if(!connection)
+			return;
+		// Grab the camera's transform
+		MatrixF mat;
+		connection->getControlCameraTransform(0, &mat);
+		Point3F posCam;
+		// Get the camera position
+		mat.getColumn(3,&posCam);
+		//Con::printf("Position dasdasdaeawdsd ? %f %f %f", posCam.x, posCam.y, posCam.z);
+		F32 distanceAffichage = (posObj - posCam).len();
+
+		// FlyingSquirrels // AH
+		// A revoir pour une bonne transition
+		for (int i = 1; i < mShape->getTransitionTime().size(); ++i)
+		{
+			if (mShape->getTransitionTime().at(i) > distanceAffichage)
+			{
+				mCurrentDetailLevel = i-1;
+				break;
+			}
+		}
+		//const TSDetail * detail = &mShape->details[mCurrentDetailLevel];
+		//Con::printf("Nom de l'objet affiche est : %i et est ce qu'il transitionne ? %i", mShape->getMeshName(mCurrentDetailLevel), detail->nameIndex);
+// 		Con::printf("--- AH --- TSSapeInstance::Render --- mCurrentDetailLevel : %i", mCurrentDetailLevel);
+		
+		//Con::printf("Distance ? %f", distanceAffichage);
+		if (mCurrentDetailLevel < mShape->getTransitionTime().size() - 1)
+		{
+			U32 beginTransition = mShape->getTransitionTime().at(mCurrentDetailLevel);
+			U32 endTransition = mShape->getTransitionTime().back() == beginTransition ? mShape->getTransitionTime().back()*2 : mShape->getTransitionTime().at(mCurrentDetailLevel+1);
+			//if (mShape->getTransitionTime().back() == beginTransition)
+				//Con::printf("Bordel de foutre de bite poilu : %i", beginTransition);
+			if (endTransition != mShape->getTransitionTime().back()*2)
+			{
+				// Calculer la partie sequentielle
+				// Calculer la distance d'apparition
+				U32 test = endTransition - beginTransition;
+				U32 addSample = test / 10;
+				test /= 2;
+				beginTransition += test + addSample;
+				endTransition -= test + addSample;
+
+
+
+				// facteur d'affichage
+				F32 factorAffichage = beginTransition - endTransition;
+				F32 factor1 = distanceAffichage - endTransition;
+				//Con::printf("---------- Ici le factor1 est de %f  ----------", factor1);
+				if (factor1 >= 0.0)
+				{
+					factor = factor1 / factorAffichage;
+						render( rdata, mCurrentDetailLevel+1, mCurrentIntraDetailLevel, factor*2);
+// 						if (lodRendered_ == mCurrentDetailLevel)
+// 						{
+// 							mCurrentDetailLevel = mCurrentDetailLevel + 1;
+// 							factor = 1 - factor;
+// 						}
+// 						lodRendered_ = mCurrentDetailLevel;
+					factor = 1 - factor;
+				}
+			}
+		}
+		render( rdata, mCurrentDetailLevel, mCurrentIntraDetailLevel, factor);
+	}
    else
-   {
-      // draw next detail level w/ alpha=1 and this detail level w/
-      // alpha = 1-intraDL/alphaOut
+	   render( rdata, mCurrentDetailLevel, mCurrentIntraDetailLevel, factor);
 
-      // first draw next detail level
-      if ( mCurrentDetailLevel + 1 < mShape->details.size() && mShape->details[ mCurrentDetailLevel + 1 ].size > 0.0f )
-         render( rdata, mCurrentDetailLevel+1, 0.0f );
+   /// This first case is the single detail level render.
+//   if ( mCurrentIntraDetailLevel > alphaIn + alphaOut )
+//     render( rdata, mCurrentDetailLevel, mCurrentIntraDetailLevel, factor);
+//    else if ( mCurrentIntraDetailLevel > alphaOut )
+//    {
+//       // draw this detail level w/ alpha=1 and next detail level w/
+//       // alpha=1-(intraDl-alphaOut)/alphaIn
+// 
+//       // first draw next detail level
+//       if ( mCurrentDetailLevel + 1 < mShape->details.size() && mShape->details[ mCurrentDetailLevel + 1 ].size > 0.0f )
+//       {
+//          setAlphaAlways( saveAA * ( alphaIn + alphaOut - mCurrentIntraDetailLevel ) / alphaIn );
+//          render( rdata, mCurrentDetailLevel + 1, 0.0f, factor );
+//       }
+// 
+       //setAlphaAlways( saveAA );
+//       render( rdata, mCurrentDetailLevel, mCurrentIntraDetailLevel, factor );
+//    }
+//    else
+//    {
+//       // draw next detail level w/ alpha=1 and this detail level w/
+//       // alpha = 1-intraDL/alphaOut
+// 
+//       // first draw next detail level
+//       if ( mCurrentDetailLevel + 1 < mShape->details.size() && mShape->details[ mCurrentDetailLevel + 1 ].size > 0.0f )
+//          render( rdata, mCurrentDetailLevel+1, 0.0f );
+// 
+//       setAlphaAlways( saveAA * mCurrentIntraDetailLevel / alphaOut );
+//       render( rdata, mCurrentDetailLevel, mCurrentIntraDetailLevel, factor );
+//       setAlphaAlways( saveAA );
+//    }
 
-      setAlphaAlways( saveAA * mCurrentIntraDetailLevel / alphaOut );
-      render( rdata, mCurrentDetailLevel, mCurrentIntraDetailLevel );
-      setAlphaAlways( saveAA );
-   }
+   //Con::printf("---- Je teste ma transition : %i et la fin %i -------------", mShape->getBeginTransition(), mShape->getEndTransition());
+
 }
 
 void TSShapeInstance::setMeshForceHidden( const char *meshName, bool hidden )
@@ -505,7 +595,7 @@ void TSShapeInstance::setMeshForceHidden( S32 meshIndex, bool hidden )
    mMeshObjects[meshIndex].forceHidden = hidden;
 }
 
-void TSShapeInstance::render( const TSRenderState &rdata, S32 dl, F32 intraDL )
+void TSShapeInstance::render( const TSRenderState &rdata, S32 dl, F32 intraDL, F32 factor)
 {
    AssertFatal( dl >= 0 && dl < mShape->details.size(),"TSShapeInstance::render" );
 
@@ -533,9 +623,11 @@ void TSShapeInstance::render( const TSRenderState &rdata, S32 dl, F32 intraDL )
    {
       // following line is handy for debugging, to see what part of the shape that it is rendering
       // const char *name = mShape->names[ mMeshObjects[i].object->nameIndex ];
-      mMeshObjects[i].render( od, mMaterialList, rdata, mAlphaAlways ? mAlphaAlwaysValue : 1.0f );
+      mMeshObjects[i].render( od, mMaterialList, rdata, mAlphaAlways ? mAlphaAlwaysValue : 1.0f, factor);
    }
 }
+
+
 
 void TSShapeInstance::setCurrentDetail( S32 dl, F32 intraDL )
 {
@@ -713,13 +805,14 @@ void TSShapeInstance::ObjectInstance::render( S32, TSMaterialList *, const TSRen
 void TSShapeInstance::MeshObjectInstance::render(  S32 objectDetail, 
                                                    TSMaterialList *materials, 
                                                    const TSRenderState &rdata, 
-                                                   F32 alpha )
+                                                   F32 alpha,
+												   F32 factor)
 {
    PROFILE_SCOPE( TSShapeInstance_MeshObjectInstance_render );
 
    if ( forceHidden || ( ( visible * alpha ) <= 0.01f ) )
       return;
-
+   
    TSMesh *mesh = getMesh(objectDetail);
    if ( !mesh )
       return;
@@ -738,6 +831,7 @@ void TSShapeInstance::MeshObjectInstance::render(  S32 objectDetail,
    GFX->multWorld( transform );
 
    mesh->setFade( visible * alpha );
+   
 
    // Pass a hint to the mesh that time has advanced and that the
    // skin is dirty and needs to be updated.  This should result
@@ -745,12 +839,16 @@ void TSShapeInstance::MeshObjectInstance::render(  S32 objectDetail,
    const U32 currTime = Sim::getCurrentTime();
    bool isSkinDirty = currTime != mLastTime;
 
+
+	   //Con::printf("Je rentre dans le render de tsShapeInstance avec le detail %i et nb poly %i", objectDetail, mesh->getNumPolys());
+   
    mesh->render(  materials, 
                   rdata, 
                   isSkinDirty,
                   *mTransforms, 
                   mVertexBuffer,
-                  mPrimitiveBuffer );
+                  mPrimitiveBuffer,
+				  factor);
 
    // Update the last render time.
    mLastTime = currTime;
