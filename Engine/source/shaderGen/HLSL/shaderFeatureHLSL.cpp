@@ -1593,6 +1593,10 @@ void VertPositionHLSL::determineFeature(  Material *material,
 {
    // This feature is always on!
    outFeatureData->features.addFeature( type );
+
+   //  [4/18/2013 belp1710]
+   if(outFeatureData->features.hasFeature(MFT_Fur))
+      mStage = stageNum;
 }
 
 void VertPositionHLSL::processVert( Vector<ShaderComponent*> &componentList, 
@@ -1614,9 +1618,16 @@ void VertPositionHLSL::processVert( Vector<ShaderComponent*> &componentList,
 
    Var *modelview = getModelView( componentList, fd.features[MFT_UseInstancing], meta ); 
 
-   meta->addStatement( new GenOp( "   @ = mul(@, float4(@.xyz,1));\r\n", 
-      outPosition, modelview, inPosition ) );
+   //  [4/17/2013 belp1710]
+   if(fd.features.hasFeature(MFT_Fur) && mStage)
+   {
+	   Var *normal = (Var*)LangElement::find( "normal" );
+	   String statement = "   @ += 0.005 * " + String::ToString(mStage) + " * normalize(@);\r\n";
+	   meta->addStatement( new GenOp( statement, inPosition, normal ) );
+   }
 
+   meta->addStatement( new GenOp( "   @ = mul(@, float4(@,1));\r\n", 
+	   outPosition, modelview, inPosition ) );
    output = meta;
 }
 
@@ -2385,6 +2396,55 @@ void RenderTargetZeroHLSL::processPix( Vector<ShaderComponent*> &componentList, 
    output = new GenOp( "   @;\r\n", assignColor( new GenOp( "0.00001" ), Material::None, NULL, mOutputTargetMask ) );
 }
 
+//****************************************************************************
+// HeatMap
+//****************************************************************************
+void HeatMapFeatureHLSL::processVert( Vector<ShaderComponent*> &componentList, 
+	const MaterialFeatureData &fd )
+{
+	MultiLine *meta = new MultiLine;
+	getOutTexCoord(   "texCoord", 
+		"float2", 
+		true, 
+		false, 
+		meta, 
+		componentList );
+	output = meta;
+}
+
+void HeatMapFeatureHLSL::processPix( Vector<ShaderComponent*> &componentList, 
+	const MaterialFeatureData &fd )
+{
+	MultiLine * meta = new MultiLine;
+
+	// Find the constant value
+	Var *heatFactor = (Var *)( LangElement::find("heatFactor") );
+	if( heatFactor == NULL )
+	{
+		heatFactor = new Var;
+		heatFactor->setType( "float" );
+		heatFactor->setName( "heatFactor" );
+		heatFactor->constSortPos = cspPotentialPrimitive;
+		heatFactor->uniform = true;
+	}
+
+	// Find output fragment
+	Var *color = (Var*) LangElement::find( getOutputTargetVarName(DefaultTarget) );
+	if ( !color )
+	{
+		color = new Var;
+		color->setType( "fragout" );
+		color->setName( getOutputTargetVarName(DefaultTarget) );
+		color->setStructName( "OUT" );
+		
+		//output = new GenOp( "   @.a = @;\r\n", color, heatFactor );
+	}
+
+	meta->addStatement(new GenOp( "   @.a = @;\r\n", color, heatFactor ));
+
+	output = meta;
+}
+
 
 //****************************************************************************
 // HDR Output
@@ -2702,3 +2762,112 @@ void ImposterVertFeatureHLSL::determineFeature( Material *material,
       outFeatureData->features.addFeature( MFT_ImposterVert );
 }
 
+//****************************************************************************
+// FurFeatureHLSL
+//****************************************************************************
+//  [4/15/2013 belp1710]
+void FurFeatureHLSL::processPix( Vector<ShaderComponent*> &componentList, const MaterialFeatureData &fd )
+{
+	// grab connector texcoord register
+	Var *inTex = getInTexCoord( "texCoord", "float2", true, componentList );
+
+	// create texture var
+	Var *furMap = new Var;
+	furMap->setType( "sampler2D" );
+	furMap->setName( "furMap" );
+	furMap->uniform = true;
+	furMap->sampler = true;
+	furMap->constNum = Var::getTexUnitNum();     // used as texture unit num here
+
+	// search for color var
+	Var *color = (Var*) LangElement::find( getOutputTargetVarName(DefaultTarget) );
+
+	MultiLine *meta = new MultiLine;
+	LangElement *statement = new GenOp( "tex2D(@, @).r", furMap, inTex );
+	//meta->addStatement(new GenOp( "   @.rgb *= 2;\r\n", color ));
+	meta->addStatement(new GenOp( "   @.a *= @;\r\n", color, statement ));
+
+	output = meta;
+}
+
+void FurFeatureHLSL::setTexData(   Material::StageData &stageDat,
+	const MaterialFeatureData &fd,
+	RenderPassData &passData,
+	U32 &texIndex )
+{
+	GFXTextureObject *tex = stageDat.getTex( MFT_Fur );
+	if ( tex )
+		passData.mTexSlot[ texIndex++ ].texObject = tex;
+}
+
+ShaderFeature::Resources FurFeatureHLSL::getResources( const MaterialFeatureData &fd )
+{
+	Resources res; 
+	res.numTex = 1;
+	res.numTexReg = 1;
+
+	return res;
+}
+
+void FurFeatureHLSL::determineFeature(  Material *material,
+	const GFXVertexFormat *vertexFormat,
+	U32 stageNum,
+	const FeatureType &type,
+	const FeatureSet &features,
+	MaterialFeatureData *outFeatureData )
+{
+	if(outFeatureData->features.hasFeature(MFT_Fur))
+	{
+		switch(stageNum)
+		{
+		case 0:
+			outFeatureData->features.addFeature( MFT_Layer0 );
+			break;
+		case 1:
+			outFeatureData->features.addFeature( MFT_Layer1 );
+			break;
+		case 2:
+			outFeatureData->features.addFeature( MFT_Layer2 );
+			break;
+		case 3:
+			outFeatureData->features.addFeature( MFT_Layer3 );
+			break;
+		case 4:
+			outFeatureData->features.addFeature( MFT_Layer4 );
+			break;
+		case 5:
+			outFeatureData->features.addFeature( MFT_Layer5 );
+			break;
+		case 6:
+			outFeatureData->features.addFeature( MFT_Layer6 );
+			break;
+		case 7:
+			outFeatureData->features.addFeature( MFT_Layer7 );
+			break;
+		case 8:
+			outFeatureData->features.addFeature( MFT_Layer8 );
+			break;
+		case 9:
+			outFeatureData->features.addFeature( MFT_Layer9 );
+			break;
+		case 10:
+			outFeatureData->features.addFeature( MFT_Layer10 );
+			break;
+		case 11:
+			outFeatureData->features.addFeature( MFT_Layer11 );
+			break;
+		case 12:
+			outFeatureData->features.addFeature( MFT_Layer12 );
+			break;
+		case 13:
+			outFeatureData->features.addFeature( MFT_Layer13 );
+			break;
+		case 14:
+			outFeatureData->features.addFeature( MFT_Layer14 );
+			break;
+		case 15:
+			outFeatureData->features.addFeature( MFT_Layer15 );
+			break;
+		}
+	}
+}

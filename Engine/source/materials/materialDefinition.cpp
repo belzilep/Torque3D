@@ -193,6 +193,8 @@ Material::Material()
    
    mDirectSoundOcclusion = 1.f;
    mReverbSoundOcclusion = 1.0;
+
+   mHeatFactor = 0.0f;
 }
 
 void Material::initPersistFields()
@@ -251,6 +253,10 @@ void Material::initPersistFields()
          "If this texture contains alpha information, the alpha channel of the texture will be used as the gloss map. "
          "This provides a per-pixel replacement for the 'specularPower' on the material" );
 
+	  //  [4/16/2013 belp1710]
+	  addField("furMap", TypeImageFilename, Offset(mFurMapFilename, Material), MAX_STAGES,
+		  "The fur texture map." );
+
       addField( "parallaxScale", TypeF32, Offset(mParallaxScale, Material), MAX_STAGES,
          "Enables parallax mapping and defines the scale factor for the parallax effect.  Typically "
          "this value is less than 0.4 else the effect breaks down." );
@@ -281,6 +287,9 @@ void Material::initPersistFields()
 
       addField("glow", TypeBool, Offset(mGlow, Material), MAX_STAGES,
          "Enables rendering this material to the glow buffer." );
+
+      addField("heatFactor", TypeF32, Offset(mHeatFactor, Material),
+	     " Between 0 and 1, used to generate heat map for thermal vision" );
 
       addField("emissive", TypeBool, Offset(mEmissive, Material), MAX_STAGES,
          "Enables emissive lighting for the material." );

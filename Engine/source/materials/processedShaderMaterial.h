@@ -43,7 +43,9 @@ class ShaderConstHandles
 public:
 	// FlyingSquirrels //PLB
    GFXShaderConstHandle* mTimerSC;
+   GFXShaderConstHandle* mActivationPosSC;
    GFXShaderConstHandle* mScaleSC;
+   GFXShaderConstHandle* mHeatFactorSC; //  [4/12/2013 belk2407]
    // Flying Squirrels //AH
    GFXShaderConstHandle* mFactorAlphaLODSC;
 

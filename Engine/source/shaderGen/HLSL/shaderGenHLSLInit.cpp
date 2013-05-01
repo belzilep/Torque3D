@@ -79,6 +79,7 @@ void _initShaderGenHLSL( ShaderGen *shaderGen )
    FEATUREMGR->registerFeature( MFT_EyeSpaceDepthOut, new EyeSpaceDepthOutHLSL() );
 
    FEATUREMGR->registerFeature( MFT_HDROut, new HDROutHLSL );
+   FEATUREMGR->registerFeature( MFT_HeatMap, new HeatMapFeatureHLSL );
 
    FEATUREMGR->registerFeature( MFT_ParaboloidVertTransform, new ParaboloidVertTransformHLSL );
    FEATUREMGR->registerFeature( MFT_IsSinglePassParaboloid, new NamedFeatureHLSL( "Single Pass Paraboloid" ) );
@@ -93,6 +94,26 @@ void _initShaderGenHLSL( ShaderGen *shaderGen )
    FEATUREMGR->registerFeature( MFT_ForwardShading, new NamedFeatureHLSL( "Forward Shaded Material" ) );
 
    FEATUREMGR->registerFeature( MFT_ImposterVert, new ImposterVertFeatureHLSL );
+
+   //  [4/16/2013 belp1710]
+   FEATUREMGR->registerFeature( MFT_Fur, new FurFeatureHLSL );
+
+   FEATUREMGR->registerFeature( MFT_Layer0, new Layer0FeatHLSL );
+   FEATUREMGR->registerFeature( MFT_Layer1, new Layer1FeatHLSL );
+   FEATUREMGR->registerFeature( MFT_Layer2, new Layer2FeatHLSL );
+   FEATUREMGR->registerFeature( MFT_Layer3, new Layer3FeatHLSL );
+   FEATUREMGR->registerFeature( MFT_Layer4, new Layer4FeatHLSL );
+   FEATUREMGR->registerFeature( MFT_Layer5, new Layer5FeatHLSL );
+   FEATUREMGR->registerFeature( MFT_Layer6, new Layer6FeatHLSL );
+   FEATUREMGR->registerFeature( MFT_Layer7, new Layer7FeatHLSL );
+   FEATUREMGR->registerFeature( MFT_Layer8, new Layer8FeatHLSL );
+   FEATUREMGR->registerFeature( MFT_Layer9, new Layer9FeatHLSL );
+   FEATUREMGR->registerFeature( MFT_Layer10, new Layer10FeatHLSL );
+   FEATUREMGR->registerFeature( MFT_Layer11, new Layer11FeatHLSL );
+   FEATUREMGR->registerFeature( MFT_Layer12, new Layer12FeatHLSL );
+   FEATUREMGR->registerFeature( MFT_Layer13, new Layer13FeatHLSL );
+   FEATUREMGR->registerFeature( MFT_Layer14, new Layer14FeatHLSL );
+   FEATUREMGR->registerFeature( MFT_Layer15, new Layer15FeatHLSL );
 }
 
 MODULE_BEGIN( ShaderGenHLSL )

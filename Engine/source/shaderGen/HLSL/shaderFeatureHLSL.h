@@ -182,9 +182,34 @@ public:
 };
 
 
+class HeatMapFeatureHLSL : public ShaderFeatureHLSL
+{
+protected:
+	String mFeatureName;
+
+public:
+	HeatMapFeatureHLSL()
+	{
+		char buffer[256];
+		dSprintf(buffer, sizeof(buffer), "Heat Map");
+		mFeatureName = buffer;
+	}
+
+	virtual String getName() { return mFeatureName; }
+
+	virtual void processVert( Vector<ShaderComponent*> &componentList,
+		const MaterialFeatureData &fd );
+
+	virtual void processPix( Vector<ShaderComponent*> &componentList, 
+		const MaterialFeatureData &fd );
+};
+
+
 /// Vertex position
 class VertPositionHLSL : public ShaderFeatureHLSL
 {
+private:
+	U32 mStage;
 public:
    virtual void processVert( Vector<ShaderComponent*> &componentList,
                              const MaterialFeatureData &fd );
@@ -650,5 +675,176 @@ public:
                                   MaterialFeatureData *outFeatureData );
 };
 
+
+//  [4/15/2013 belp1710]
+class FurFeatureHLSL : public ShaderFeatureHLSL
+{
+public:
+	virtual String getName()
+	{
+		return "Fur";
+	}
+
+	virtual Resources getResources( const MaterialFeatureData &fd );
+
+	// Sets textures and texture flags for current pass
+	virtual void setTexData( Material::StageData &stageDat,
+		const MaterialFeatureData &fd,
+		RenderPassData &passData,
+		U32 &texIndex );
+
+	virtual void determineFeature(   Material *material,
+		const GFXVertexFormat *vertexFormat,
+		U32 stageNum,
+		const FeatureType &type,
+		const FeatureSet &features,
+		MaterialFeatureData *outFeatureData );
+
+	virtual void processPix( Vector<ShaderComponent*> &componentList, const MaterialFeatureData &fd );
+};
+
+class Layer0FeatHLSL : public ShaderFeatureHLSL
+{
+public:
+	virtual String getName()
+	{
+		return "Layer 0";
+	}
+};
+
+class Layer1FeatHLSL : public ShaderFeatureHLSL
+{
+public:
+	virtual String getName()
+	{
+		return "Layer 1";
+	}
+};
+
+class Layer2FeatHLSL : public ShaderFeatureHLSL
+{
+public:
+	virtual String getName()
+	{
+		return "Layer 2";
+	}
+};
+
+class Layer3FeatHLSL : public ShaderFeatureHLSL
+{
+public:
+	virtual String getName()
+	{
+		return "Layer 3";
+	}
+};
+
+class Layer4FeatHLSL : public ShaderFeatureHLSL
+{
+public:
+	virtual String getName()
+	{
+		return "Layer 4";
+	}
+};
+
+class Layer5FeatHLSL : public ShaderFeatureHLSL
+{
+public:
+	virtual String getName()
+	{
+		return "Layer 5";
+	}
+};
+
+class Layer6FeatHLSL : public ShaderFeatureHLSL
+{
+public:
+	virtual String getName()
+	{
+		return "Layer 6";
+	}
+};
+
+class Layer7FeatHLSL : public ShaderFeatureHLSL
+{
+public:
+	virtual String getName()
+	{
+		return "Layer 7";
+	}
+};
+
+class Layer8FeatHLSL : public ShaderFeatureHLSL
+{
+public:
+	virtual String getName()
+	{
+		return "Layer 8";
+	}
+};
+
+class Layer9FeatHLSL : public ShaderFeatureHLSL
+{
+public:
+	virtual String getName()
+	{
+		return "Layer 9";
+	}
+};
+
+class Layer10FeatHLSL : public ShaderFeatureHLSL
+{
+public:
+	virtual String getName()
+	{
+		return "Layer 10";
+	}
+};
+
+class Layer11FeatHLSL : public ShaderFeatureHLSL
+{
+public:
+	virtual String getName()
+	{
+		return "Layer 11";
+	}
+};
+
+class Layer12FeatHLSL : public ShaderFeatureHLSL
+{
+public:
+	virtual String getName()
+	{
+		return "Layer 12";
+	}
+};
+
+class Layer13FeatHLSL : public ShaderFeatureHLSL
+{
+public:
+	virtual String getName()
+	{
+		return "Layer 13";
+	}
+};
+
+class Layer14FeatHLSL : public ShaderFeatureHLSL
+{
+public:
+	virtual String getName()
+	{
+		return "Layer 14";
+	}
+};
+
+class Layer15FeatHLSL : public ShaderFeatureHLSL
+{
+public:
+	virtual String getName()
+	{
+		return "Layer 15";
+	}
+};
 
 #endif // _SHADERGEN_HLSL_SHADERFEATUREHLSL_H_

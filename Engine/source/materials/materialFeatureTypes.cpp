@@ -56,7 +56,28 @@ ImplementFeatureType( MFT_GlowMask, MFG_PostLighting, 1.0f, true );
 ImplementFeatureType( MFT_Visibility, MFG_PostLighting, 2.0f, true );
 ImplementFeatureType( MFT_Fog, MFG_PostProcess, 3.0f, true );
 
+ImplementFeatureType( MFT_HeatMap, MFG_PostProcess, 998.0f, true );
 ImplementFeatureType( MFT_HDROut, MFG_PostProcess, 999.0f, true );
+
+//  [4/15/2013 belp1710]
+ImplementFeatureType( MFT_Fur, MFG_Texture, 11.0f, true );
+
+ImplementFeatureType( MFT_Layer0, MFG_PreTexture, 980.0f, true);
+ImplementFeatureType( MFT_Layer1, MFG_PreTexture, 981.0f, true);
+ImplementFeatureType( MFT_Layer2, MFG_PreTexture, 982.0f, true);
+ImplementFeatureType( MFT_Layer3, MFG_PreTexture, 983.0f, true);
+ImplementFeatureType( MFT_Layer4, MFG_PreTexture, 984.0f, true);
+ImplementFeatureType( MFT_Layer5, MFG_PreTexture, 985.0f, true);
+ImplementFeatureType( MFT_Layer6, MFG_PreTexture, 986.0f, true);
+ImplementFeatureType( MFT_Layer7, MFG_PreTexture, 987.0f, true);
+ImplementFeatureType( MFT_Layer8, MFG_PreTexture, 988.0f, true);
+ImplementFeatureType( MFT_Layer9, MFG_PreTexture, 989.0f, true);
+ImplementFeatureType( MFT_Layer10, MFG_PreTexture, 990.0f, true);
+ImplementFeatureType( MFT_Layer11, MFG_PreTexture, 991.0f, true);
+ImplementFeatureType( MFT_Layer12, MFG_PreTexture, 992.0f, true);
+ImplementFeatureType( MFT_Layer13, MFG_PreTexture, 993.0f, true);
+ImplementFeatureType( MFT_Layer14, MFG_PreTexture, 994.0f, true);
+ImplementFeatureType( MFT_Layer15, MFG_PreTexture, 995.0f, true);
 
 ImplementFeatureType( MFT_IsDXTnm, U32(-1), -1, true );
 ImplementFeatureType( MFT_IsTranslucent, U32(-1), -1, true );

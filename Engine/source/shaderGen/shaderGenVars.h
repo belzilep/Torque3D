@@ -34,6 +34,7 @@ struct ShaderGenVars
 {
 	// FlyingSquirrels //PLB
 	const static String timer;
+	const static String activationPos;
 	const static String scale;
 	// FlyingSquirrels //Ah
 	const static String factorAlphaLOD;

@@ -461,6 +461,15 @@ void ProcessedMaterial::_setStageData()
          if(!mStages[i].getTex( MFT_EnvMap ))
             mMaterial->logError("Failed to load environment map %s for stage %i", _getTexturePath(mMaterial->mEnvMapFilename[i]).c_str(), i);
       }
+
+	  //  [4/16/2013 belp1710]
+	  // FurMap
+	  if( mMaterial->mFurMapFilename[i].isNotEmpty() )
+	  {
+		  mStages[i].setTex( MFT_Fur, _createTexture( mMaterial->mFurMapFilename[i], &GFXDefaultStaticDiffuseProfile ) );
+		  if(!mStages[i].getTex( MFT_Fur ))
+			  mMaterial->logError("Failed to load fur map %s for stage %i", _getTexturePath(mMaterial->mFurMapFilename[i]).c_str(), i);
+	  }
    }
 
 	mMaterial->mCubemapData = dynamic_cast<CubemapData*>(Sim::findObject( mMaterial->mCubemapName ));

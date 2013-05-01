@@ -174,6 +174,7 @@ void TSMesh::innerRender( TSMaterialList *materials, const TSRenderState &rdata,
    // FlyingSquirrels //PLB
    coreRI->mTimer = rdata1.getTimer();
    coreRI->mFactorAlphaLOD = rdata1.getFactorAlphaLOD();
+   coreRI->mActivationPos = rdata1.getActivationPos();
 
    const MatrixF &objToWorld = GFX->getWorldMatrix();
    
