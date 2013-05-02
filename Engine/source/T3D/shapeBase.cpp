@@ -188,7 +188,8 @@ ShapeBaseData::ShapeBaseData()
    computeCRC( false ),
    inheritEnergyFromMount( false ),
    mCRC( 0 ),
-   debrisDetail( -1 )
+   debrisDetail( -1 ),
+   IKisActive(false)
 {      
    dMemset( mountPointNode, -1, sizeof( S32 ) * SceneObject::NumMountPoints );
 }
@@ -576,6 +577,14 @@ void ShapeBaseData::initPersistFields()
 
    endGroup( "Reflection" );
 
+   addGroup( "Inverse kinematics" );
+
+   addField( "IKisActive", TypeBool, Offset(IKisActive, ShapeBaseData),
+	   "@brief Allow inverse kinematics to be applied to the shape.\n\n"
+	   "Apply inverse kinematics to the nodes of the shape instance.\n");
+
+   endGroup( "Inverse kinematics" );
+
    Parent::initPersistFields();
 }
 
@@ -713,6 +722,7 @@ void ShapeBaseData::packData(BitStream* stream)
    }
 
    stream->writeFlag(inheritEnergyFromMount);
+   stream->writeFlag(IKisActive);
    stream->writeFlag(firstPersonOnly);
    stream->writeFlag(useEyePoint);
    
@@ -811,6 +821,7 @@ void ShapeBaseData::unpackData(BitStream* stream)
    }
 
    inheritEnergyFromMount = stream->readFlag();
+   IKisActive = stream->readFlag();
    firstPersonOnly = stream->readFlag();
    useEyePoint = stream->readFlag();
 
@@ -1096,7 +1107,7 @@ bool ShapeBase::onNewDataBlock( GameBaseData *dptr, bool reload )
    // a shape assigned to this object.
    if (bool(mDataBlock->mShape)) {
       delete mShapeInstance;
-      mShapeInstance = new TSShapeInstance(mDataBlock->mShape, isClientObject());
+      mShapeInstance = new TSShapeInstance(this, mDataBlock->mShape, isClientObject());
       if (isClientObject())
          mShapeInstance->cloneMaterialList();
 
@@ -1802,7 +1813,7 @@ void ShapeBase::blowUp()
    }
    else
    {
-      debShape = new TSShapeInstance( mDataBlock->debrisShape, true);
+      debShape = new TSShapeInstance(this, mDataBlock->debrisShape, true);
    }
 
 

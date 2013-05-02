@@ -32,6 +32,8 @@
 
 #include "T3D/gameBase/gameProcess.h"
 
+#include <vector>
+
 class Material;
 class ParticleEmitter;
 class ParticleEmitterData;
@@ -53,8 +55,6 @@ struct PlayerData: public ShapeBaseData {
       BUBBLE_EMITTER = 2,
    };
    bool renderFirstPerson;    ///< Render the player shape in first person
-
-   bool isPuppet;
 
    /// Render shadows while in first person when 
    /// renderFirstPerson is disabled.
@@ -382,6 +382,8 @@ class Player: public ShapeBase
 {
    typedef ShapeBase Parent;
 
+   static std::vector<Player*>	mClientSidePlayers;
+
 public:
    enum Pose {
       StandPose = 0,
@@ -693,6 +695,8 @@ public:
    ~Player();
    static void consoleInit();
 
+   static const std::vector<Player*>&  getClientSidePlayers() { return mClientSidePlayers; }
+
    /// @name Transforms
    /// @{
 
@@ -783,10 +787,9 @@ public:
    virtual void renderConvex( ObjectRenderInst *ri, SceneRenderState *state, BaseMatInstance *overrideMat );   
    virtual void renderMountedImage( U32 imageSlot, TSRenderState &rstate, SceneRenderState *state );
 
-   // Fying Squirrels
-   void setPuppet();
-   void setKeyAnim();
-   void updatePuppet(F32 dt);  
+   //  [5/1/2013 belk2407]
+   void activateIK();
+   void deactivateIK();
 
    bool isDead();
 };

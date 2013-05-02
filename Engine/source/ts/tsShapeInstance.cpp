@@ -106,7 +106,7 @@ Vector<TSThread*>             TSShapeInstance::smScaleThreads(__FILE__, __LINE__
 // constructors, destructors, initialization
 //-------------------------------------------------------------------------------------
 
-TSShapeInstance::TSShapeInstance( const Resource<TSShape> &shape, bool loadMaterials )
+TSShapeInstance::TSShapeInstance(const Resource<TSShape> &shape, bool loadMaterials )
 {
    VECTOR_SET_ASSOCIATION(mMeshObjects);
    VECTOR_SET_ASSOCIATION(mNodeTransforms);
@@ -120,12 +120,15 @@ TSShapeInstance::TSShapeInstance( const Resource<TSShape> &shape, bool loadMater
 
    mShapeResource = shape;
    mShape = mShapeResource;
-   buildInstanceData( mShape, loadMaterials );
+   mShapeBase = NULL;
+   mUpdateTimer = NULL;
+
+   buildInstanceData( mShape, loadMaterials );   
    lodRendered_ = 0;
    isInTransitionLOD_ = false;
 }
 
-TSShapeInstance::TSShapeInstance( TSShape *shape, bool loadMaterials )
+TSShapeInstance::TSShapeInstance(TSShape *shape, bool loadMaterials )
 {
    VECTOR_SET_ASSOCIATION(mMeshObjects);
    VECTOR_SET_ASSOCIATION(mNodeTransforms);
@@ -139,9 +142,32 @@ TSShapeInstance::TSShapeInstance( TSShape *shape, bool loadMaterials )
 
    mShapeResource = NULL;
    mShape = shape;
-   buildInstanceData( mShape, loadMaterials );
+   mShapeBase = NULL;
+   mUpdateTimer = NULL;
+
+   buildInstanceData( mShape, loadMaterials );  
    lodRendered_ = 0;
    isInTransitionLOD_ = false;
+}
+
+TSShapeInstance::TSShapeInstance(ShapeBase *pShapeBase, TSShape *shape, bool loadMaterials )
+{
+	VECTOR_SET_ASSOCIATION(mMeshObjects);
+	VECTOR_SET_ASSOCIATION(mNodeTransforms);
+	VECTOR_SET_ASSOCIATION(mNodeReferenceRotations);
+	VECTOR_SET_ASSOCIATION(mNodeReferenceTranslations);
+	VECTOR_SET_ASSOCIATION(mNodeReferenceUniformScales);
+	VECTOR_SET_ASSOCIATION(mNodeReferenceScaleFactors);
+	VECTOR_SET_ASSOCIATION(mNodeReferenceArbitraryScaleRots);
+	VECTOR_SET_ASSOCIATION(mThreadList);
+	VECTOR_SET_ASSOCIATION(mTransitionThreads);
+
+	mShapeResource = NULL;
+	mShape = shape;
+	mShapeBase = pShapeBase;
+	mUpdateTimer = NULL;
+
+	buildInstanceData( mShape, loadMaterials );  
 }
 
 TSShapeInstance::~TSShapeInstance()
