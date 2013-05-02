@@ -102,6 +102,9 @@ private:
 	bool isInTransitionLOD_;
    public:
 
+	// FlyingSquirrels // AH
+	   U32 mCurrentDetailLevelPerso;
+
    struct ObjectInstance;
    friend class TSThread;
    friend class TSLastDetail;

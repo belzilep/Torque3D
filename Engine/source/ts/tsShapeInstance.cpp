@@ -162,6 +162,7 @@ void TSShapeInstance::buildInstanceData(TSShape * _shape, bool loadMaterials)
 
    debrisRefCount = 0;
 
+   mCurrentDetailLevelPerso = 0;
    mCurrentDetailLevel = 0;
    mCurrentIntraDetailLevel = 1.0f;
 
@@ -436,6 +437,11 @@ void TSShapeInstance::listMeshes( const String &state ) const
    }
 }
 
+template <class T>
+T CLAMP(T v, T max, T min)
+{
+	return v > max ? max : v < min ? min : v;
+}
 
 void TSShapeInstance::render( const TSRenderState &rdata )
 {
@@ -450,15 +456,15 @@ void TSShapeInstance::render( const TSRenderState &rdata )
    // NOTE:
    //   intraDL is at 1 when if shape were any closer to us we'd be at dl-1,
    //   intraDL is at 0 when if shape were any farther away we'd be at dl+1
-   F32 alphaOut = mShape->alphaOut[mCurrentDetailLevel];
-   F32 alphaIn  = mShape->alphaIn[mCurrentDetailLevel];
-   F32 saveAA = mAlphaAlways ? mAlphaAlwaysValue : 1.0f;
+//    F32 alphaOut = mShape->alphaOut[mCurrentDetailLevel];
+//    F32 alphaIn  = mShape->alphaIn[mCurrentDetailLevel];
+//    F32 saveAA = mAlphaAlways ? mAlphaAlwaysValue : 1.0f;
 
 
    F32 factor = 1.0;
    //Con::printf("Est ce que c'est vrai ? %i", mShape->getLODRenderDetail() == TSShape::Detailled);
    // Trouver la bonne transition si il existe un LOD
-	if ( mCurrentDetailLevel < mShape->getTransitionTime().size() - 1 )
+	if ( mCurrentDetailLevelPerso < mShape->getTransitionTime().size() )
 	{
 
 		// ENFIN TROUVÉ CETTE POSITION !!!
@@ -481,23 +487,23 @@ void TSShapeInstance::render( const TSRenderState &rdata )
 
 		// FlyingSquirrels // AH
 		// A revoir pour une bonne transition
-		for (int i = 1; i < mShape->getTransitionTime().size(); ++i)
+		for (int i = 0; i < mShape->getTransitionTime().size(); ++i)
 		{
-			if (mShape->getTransitionTime().at(i) > distanceAffichage)
+			if ( mShape->getTransitionTime().at(i) < distanceAffichage )
 			{
-				mCurrentDetailLevel = i-1;
-				break;
+				mCurrentDetailLevelPerso = i;
 			}
 		}
-		//const TSDetail * detail = &mShape->details[mCurrentDetailLevel];
-		//Con::printf("Nom de l'objet affiche est : %i et est ce qu'il transitionne ? %i", mShape->getMeshName(mCurrentDetailLevel), detail->nameIndex);
+		//const TSObject * object = &mShape->objects[mCurrentDetailLevel];
+		
+		//Con::printf("Nom de l'objet affiche est mCurrentDetailLevelPerso : %i ", mCurrentDetailLevelPerso);
 // 		Con::printf("--- AH --- TSSapeInstance::Render --- mCurrentDetailLevel : %i", mCurrentDetailLevel);
 		
 		//Con::printf("Distance ? %f", distanceAffichage);
-		if (mCurrentDetailLevel < mShape->getTransitionTime().size() - 1)
+		if (mCurrentDetailLevelPerso < mShape->getTransitionTime().size())
 		{
-			U32 beginTransition = mShape->getTransitionTime().at(mCurrentDetailLevel);
-			U32 endTransition = mShape->getTransitionTime().back() == beginTransition ? mShape->getTransitionTime().back()*2 : mShape->getTransitionTime().at(mCurrentDetailLevel+1);
+			U32 beginTransition = mShape->getTransitionTime().at(mCurrentDetailLevelPerso);
+			U32 endTransition = mShape->getTransitionTime().back() == beginTransition ? mShape->getTransitionTime().back()*2 : mShape->getTransitionTime().at(mCurrentDetailLevelPerso+1);
 			//if (mShape->getTransitionTime().back() == beginTransition)
 				//Con::printf("Bordel de foutre de bite poilu : %i", beginTransition);
 			if (endTransition != mShape->getTransitionTime().back()*2)
@@ -505,7 +511,7 @@ void TSShapeInstance::render( const TSRenderState &rdata )
 				// Calculer la partie sequentielle
 				// Calculer la distance d'apparition
 				U32 test = endTransition - beginTransition;
-				U32 addSample = test / 10;
+				U32 addSample = test / 20;
 				test /= 2;
 				beginTransition += test + addSample;
 				endTransition -= test + addSample;
@@ -516,24 +522,28 @@ void TSShapeInstance::render( const TSRenderState &rdata )
 				F32 factorAffichage = beginTransition - endTransition;
 				F32 factor1 = distanceAffichage - endTransition;
 				//Con::printf("---------- Ici le factor1 est de %f  ----------", factor1);
-				if (factor1 >= 0.0)
+				if (factorAffichage > factor1 && factor1 >= 0.0)
 				{
 					factor = factor1 / factorAffichage;
-						render( rdata, mCurrentDetailLevel+1, mCurrentIntraDetailLevel, factor*2);
+						render( rdata, mCurrentDetailLevelPerso+1, 0.0, factor*2);
 // 						if (lodRendered_ == mCurrentDetailLevel)
 // 						{
 // 							mCurrentDetailLevel = mCurrentDetailLevel + 1;
 // 							factor = 1 - factor;
 // 						}
 // 						lodRendered_ = mCurrentDetailLevel;
-					factor = 1 - factor;
+					factor = 1 - (factor/1.5);
+				}
+				else if (distanceAffichage > beginTransition)
+				{
+					mCurrentDetailLevelPerso++;
 				}
 			}
 		}
-		render( rdata, mCurrentDetailLevel, mCurrentIntraDetailLevel, factor);
+		render( rdata, mCurrentDetailLevelPerso, 0.0, factor);
 	}
    else
-	   render( rdata, mCurrentDetailLevel, mCurrentIntraDetailLevel, factor);
+	   render( rdata, mCurrentDetailLevelPerso, 0.0, factor);
 
    /// This first case is the single detail level render.
 //   if ( mCurrentIntraDetailLevel > alphaIn + alphaOut )
