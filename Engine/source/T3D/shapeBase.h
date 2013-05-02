@@ -616,6 +616,8 @@ public:
 
    bool inheritEnergyFromMount;
 
+   bool IKisActive;
+
    /// @}
 
    virtual bool preload(bool server, String &errorStr);

@@ -45,6 +45,9 @@
 #include "ts/tsMaterialList.h"
 #endif
 
+#include "T3D/shapeBase.h"
+#include "platform/platformTimer.h"
+
 class RenderItem;
 class TSThread;
 class ConvexFeature;
@@ -268,6 +271,10 @@ protected:
    /// equal mShapeResource if it was created from a resource.
    TSShape *mShape;
 
+   //  [4/26/2013 belk2407]
+   // This is a pointer to the BaseShape that created this ShapeInstance
+   ShapeBase *mShapeBase;
+
    
    bool            mOwnMaterialList; ///< Does this own the material list pointer?
 
@@ -316,6 +323,8 @@ protected:
    public:
 
    TSShape* getShape() const { return mShape; }
+
+   ShapeBase* getShapeBase() const { return mShapeBase; }
 
    TSMaterialList* getMaterialList() const { return mMaterialList; }
    
@@ -497,6 +506,8 @@ protected:
    void animateSubtrees(bool forceFull = true);
    void animateNodeSubtrees(bool forceFull = true);
 
+   void animateHead();
+
    /// Sets the 'forceHidden' state on the named mesh.
    /// @see MeshObjectInstance::forceHidden
    void setMeshForceHidden( const char *meshName, bool hidden );
@@ -565,6 +576,19 @@ protected:
    U32 * mDirtyFlags;
    void setDirty(U32 dirty);
    void clearDirty(U32 dirty);
+
+   // data for inverse kinematics
+private:
+	typedef struct
+	{
+		U32 index;
+		EulerF dof; // degree of freedom of node 
+		EulerF lastRotation; // Sum of the rotations done in the last frames
+	} MyNode;
+
+	Vector<MyNode> mIKnodes;
+	PlatformTimer *mUpdateTimer;
+
 
 //-------------------------------------------------------------------------------------
 // collision interface routines
@@ -657,8 +681,9 @@ protected:
 // constructors, destructors, initialization, io
 //-------------------------------------------------------------------------------------
 
-   TSShapeInstance( const Resource<TSShape> & shape, bool loadMaterials = true);
-   TSShapeInstance( TSShape * pShape, bool loadMaterials = true);
+   TSShapeInstance(const Resource<TSShape> & shape, bool loadMaterials = true);
+   TSShapeInstance(TSShape * pShape, bool loadMaterials = true);
+   TSShapeInstance(ShapeBase *pShapeBase, TSShape * pShape, bool loadMaterials = true);
    ~TSShapeInstance();
 
    void buildInstanceData(TSShape *, bool loadMaterials);
