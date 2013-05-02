@@ -20,6 +20,7 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
+#include "platform/threads/thread.h"
 #include "platform/platform.h"
 #include "console/console.h"
 #include "console/consoleInternal.h"
@@ -2155,6 +2156,41 @@ DefineEngineFunction( exec, bool, ( const char* fileName, bool noCalls, bool jou
    delete [] script;
    execDepth--;
    return ret;
+}
+
+void launchThreadedExec(void * fileName)
+{
+	const char* argv[] = {"exec", static_cast<const char *>(fileName)};
+	Con::execute(2, argv);
+}
+
+DefineEngineFunction( threadedExec, bool, ( const char* fileName, bool noCalls, bool journalScript ), ( false, false ),
+	"Execute the given script file in a new thread.\n"
+	"@param fileName Path to the file to execute\n"
+	"@param noCalls Deprecated\n"
+	"@param journalScript Deprecated\n"
+	"@return True if the script was successfully executed, false if not.\n\n"
+	"@tsexample\n"
+	"// Execute the init.cs script file found in the same directory as the current script file.\n"
+	"threadedExec( \"./init.cs\" );\n"
+	"@endtsexample\n\n"
+	"@see compile\n"
+	"@see eval\n"
+	"@ingroup Scripting" )
+{
+	static Thread * gThread;
+
+	if(gThread)
+	{
+		gThread->join();
+		delete gThread;
+		gThread = nullptr;
+	}
+
+	gThread = new Thread(launchThreadedExec, (void*)fileName);
+	gThread->start();
+
+	return true;
 }
 
 ConsoleFunction(eval, const char *, 2, 2, "eval(consoleString)")

@@ -51,6 +51,7 @@ void ShaderConstHandles::init( GFXShader *shader, CustomMaterial* mat /*=NULL*/ 
 {
 	// FlyingSquirrels //PLB
    mTimerSC = shader->getShaderConstHandle(ShaderGenVars::timer);
+   mActivationPosSC = shader->getShaderConstHandle(ShaderGenVars::activationPos);
    mScaleSC = shader->getShaderConstHandle(ShaderGenVars::scale);
    mHeatFactorSC = shader->getShaderConstHandle("$heatFactor");
 
@@ -1139,6 +1140,12 @@ void ProcessedShaderMaterial::setTransforms(const MatrixSet &matrixSet, SceneRen
    // FlyingSquirrels //PLB
    if ( handles->mTimerSC->isValid() ) 
 	   shaderConsts->set( handles->mTimerSC, sgData.mTimer);
+   if ( handles->mActivationPosSC->isValid() ) 
+   {
+	   Point4F val = Point4F(sgData.mActivationPos.x, sgData.mActivationPos.y, sgData.mActivationPos.z, 1.0);
+	   matrixSet.getWorldToObject().mul(val);
+	   shaderConsts->set( handles->mActivationPosSC, val);
+   }
    if ( handles->mScaleSC->isValid() ) 
 	   shaderConsts->set( handles->mScaleSC, matrixSet.getObjectToWorld().getScale());
 }
