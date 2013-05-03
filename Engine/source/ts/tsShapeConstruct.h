@@ -315,6 +315,7 @@ public:
    const char* getMeshMaterial( const char* name );
    bool setMeshMaterial( const char* meshName, const char* matName );
    bool addMesh( const char* meshName, const char* srcShape, const char* srcMesh );
+   bool addMeshTest( const char* meshName, const char* srcShape, const char* srcMesh, U32 beginTransition );
    bool addPrimitive( const char* meshName, const char* type, const char* params, TransformF txfm, const char* nodeName );
    bool removeMesh( const char* name );
    ///@}

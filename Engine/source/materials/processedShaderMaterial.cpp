@@ -54,6 +54,8 @@ void ShaderConstHandles::init( GFXShader *shader, CustomMaterial* mat /*=NULL*/ 
    mActivationPosSC = shader->getShaderConstHandle(ShaderGenVars::activationPos);
    mScaleSC = shader->getShaderConstHandle(ShaderGenVars::scale);
    mHeatFactorSC = shader->getShaderConstHandle("$heatFactor");
+   // FlyingSquirrels //AH
+   mFactorAlphaLODSC = shader->getShaderConstHandle(ShaderGenVars::factorAlphaLOD);
 
    mDiffuseColorSC = shader->getShaderConstHandle("$diffuseMaterialColor");
    mTexMatSC = shader->getShaderConstHandle(ShaderGenVars::texMat);
@@ -1148,6 +1150,9 @@ void ProcessedShaderMaterial::setTransforms(const MatrixSet &matrixSet, SceneRen
    }
    if ( handles->mScaleSC->isValid() ) 
 	   shaderConsts->set( handles->mScaleSC, matrixSet.getObjectToWorld().getScale());
+   // FlyingSquirrels // AH
+   if ( handles->mFactorAlphaLODSC->isValid())
+	   shaderConsts->set( handles->mFactorAlphaLODSC, sgData.mFactorAlphaLOD);
 }
 
 void ProcessedShaderMaterial::setSceneInfo(SceneRenderState * state, const SceneData& sgData, U32 pass)

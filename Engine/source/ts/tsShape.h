@@ -62,8 +62,28 @@ struct CollisionShapeInfo
 /// lists are still loaded in TSShapeInstance.
 ///
 /// @see TSShapeInstance for a further discussion of the 3space system.
+#include <vector>
+
 class TSShape
 {
+	// FlyingSquirrels // AH ******
+public:
+	enum LODDetail
+	{
+		NoDetail = 0,
+		Detailled
+	};
+private:
+		LODDetail lodRenderDetail_;
+		std::vector<U32> transitionTime_;
+	public:
+		LODDetail getLODRenderDetail() const	{ return lodRenderDetail_; }
+		void setLODRenderDetail( LODDetail detailled ) { lodRenderDetail_ = detailled; }
+		std::vector<U32> getTransitionTime() const	{ return transitionTime_; }
+
+
+	//*****************************
+
   public:
       enum
       {
@@ -632,8 +652,10 @@ class TSShape
    bool removeObject(const String& objName);
 
    TSMesh* copyMesh( const TSMesh* srcMesh ) const;
+   bool addMesh(TSShape* srcShape, const String& srcMeshName, const String& meshName, U32 beginTransition);
    bool addMesh(TSShape* srcShape, const String& srcMeshName, const String& meshName);
    bool addMesh(TSMesh* mesh, const String& meshName);
+
    bool setMeshSize(const String& meshName, S32 size);
    bool removeMesh(const String& meshName);
 

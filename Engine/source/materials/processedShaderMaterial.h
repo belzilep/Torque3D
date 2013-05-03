@@ -46,6 +46,9 @@ public:
    GFXShaderConstHandle* mActivationPosSC;
    GFXShaderConstHandle* mScaleSC;
    GFXShaderConstHandle* mHeatFactorSC; //  [4/12/2013 belk2407]
+   // Flying Squirrels //AH
+   GFXShaderConstHandle* mFactorAlphaLODSC;
+
 
    GFXShaderConstHandle* mDiffuseColorSC;
    GFXShaderConstHandle* mToneMapTexSC;

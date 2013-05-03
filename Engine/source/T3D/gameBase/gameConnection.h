@@ -38,6 +38,7 @@
 #ifndef _BITVECTOR_H_
 #include "core/bitVector.h"
 #endif
+#include "VoiceChat.h"
 
 enum GameConnectionConstants
 {
@@ -340,6 +341,12 @@ protected:
    DECLARE_CALLBACK( void, setLagIcon, (bool state) );
    DECLARE_CALLBACK( void, onDataBlocksDone, (U32 sequence) );
    DECLARE_CALLBACK( void, onFlash, (bool state) );
+
+   // FlyingSquirrels //AH
+   private:
+	   VoiceChat  voiceComm;
+   public:
+	   VoiceChat *getVoiceComm() { return &voiceComm; }
 };
 
 #endif

@@ -36,6 +36,8 @@ struct ShaderGenVars
 	const static String timer;
 	const static String activationPos;
 	const static String scale;
+	// FlyingSquirrels //Ah
+	const static String factorAlphaLOD;
 
    const static String modelview;
    const static String worldViewOnly;

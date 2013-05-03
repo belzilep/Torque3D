@@ -40,6 +40,8 @@
 #include "core/util/safeDelete.h"
 #include "math/util/matrixSet.h"
 #include "console/engineAPI.h"
+#include "gfx/bitmap/gBitmap.h"
+#include "core/stream/fileStream.h"
 
 
 const RenderInstType RenderInstType::Invalid( "" );
@@ -242,6 +244,7 @@ void RenderPassManager::render(SceneRenderState * state)
    MatrixF proj = GFX->getProjectionMatrix();
 
    
+   
    for (Vector<RenderBinManager *>::iterator itr = mRenderBins.begin();
       itr != mRenderBins.end(); itr++)
    {
@@ -251,6 +254,7 @@ void RenderPassManager::render(SceneRenderState * state)
       curBin->render(state);
       getRenderBinSignal().trigger(curBin, state, false);
    }
+
 
    GFX->popWorldMatrix();
    GFX->setProjectionMatrix( proj );
@@ -264,9 +268,11 @@ void RenderPassManager::render(SceneRenderState * state)
 void RenderPassManager::renderPass(SceneRenderState * state)
 {
    PROFILE_SCOPE( RenderPassManager_RenderPass );
+
    sort();
    render(state);
    clear();
+
 }
 
 GFXTextureObject *RenderPassManager::getDepthTargetTexture()

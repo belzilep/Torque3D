@@ -105,6 +105,10 @@ TSShape::TSShape()
 
    VECTOR_SET_ASSOCIATION( alphaIn );
    VECTOR_SET_ASSOCIATION( alphaOut );
+
+   // FlyingSquirrels // AH
+   lodRenderDetail_ = NoDetail;
+   transitionTime_.emplace_back(0);
 }
 
 TSShape::~TSShape()

@@ -99,12 +99,21 @@ public:
 /// of how to procedurally animate models, look at Player::updateLookAnimation().
 class TSShapeInstance
 {
+
+private:
+	U32 lodRendered_;
+	bool isInTransitionLOD_;
    public:
+
+	// FlyingSquirrels // AH
+	   U32 mCurrentDetailLevelPerso;
 
    struct ObjectInstance;
    friend class TSThread;
    friend class TSLastDetail;
    friend class TSPartInstance;
+
+   // FlyingSquirrels // AH
 
    /// Base class for all renderable objects, including mesh objects and decal objects.
    ///
@@ -171,7 +180,7 @@ class TSShapeInstance
       MeshObjectInstance();
       virtual ~MeshObjectInstance() {}
 
-      void render( S32 objectDetail, TSMaterialList *, const TSRenderState &rdata, F32 alpha );
+	  void render( S32 objectDetail, TSMaterialList *, const TSRenderState &rdata, F32 alpha, F32 factor = 1.0f);
 
       /// Gets the mesh with specified detail level
       TSMesh * getMesh(S32 num) const { return num<object->numMeshes ? *(meshList+num) : NULL; }
@@ -446,7 +455,8 @@ protected:
 // animate, render, & detail control
 //-------------------------------------------------------------------------------------
 
-   public:
+   
+	public:
 
    struct RenderData
    {
@@ -495,7 +505,7 @@ protected:
    /// @}
 
    virtual void render( const TSRenderState &rdata );
-   virtual void render( const TSRenderState &rdata, S32 dl, F32 intraDL = 0.0f );
+   virtual void render( const TSRenderState &rdata, S32 dl, F32 intraDL = 0.0f, F32 factor = 1.0f );
 
    void animate() { animate( mCurrentDetailLevel ); }
    void animate(S32 dl);
