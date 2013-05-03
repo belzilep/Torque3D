@@ -391,6 +391,13 @@ void Sun::setColor( const ColorF &color )
    setMaskBits( UpdateMask ); // TODO: Break out the masks to save some space!
 }
 
+void Sun::setAmbient( const ColorF &ambient )
+{
+	mLightAmbient = ambient;
+	_conformLights();
+	setMaskBits( UpdateMask ); // TODO: Break out the masks to save some space!
+}
+
 void Sun::animate( F32 duration, F32 startAzimuth, F32 endAzimuth, F32 startElevation, F32 endElevation )
 {
    mAnimateSun = true;
@@ -561,3 +568,12 @@ ConsoleMethod(Sun, animate, void, 7, 7, "animate( F32 duration, F32 startAzimuth
    object->animate(duration, startAzimuth, endAzimuth, startElevation, endElevation);
 }
 
+ConsoleMethod(Sun, setAmbient, void, 6, 6, "setAmbient(1.0, 1.0, 1.0 , 1.0)")
+{
+	F32 r = dAtof(argv[2]);
+	F32 g = dAtof(argv[3]);
+	F32 b = dAtof(argv[4]);
+	F32 a = dAtof(argv[5]);
+
+	object->setAmbient(ColorF(r, g, b, a));
+}

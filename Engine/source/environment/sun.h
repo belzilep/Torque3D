@@ -136,6 +136,8 @@ public:
    ///
    void setColor( const ColorF &color );
 
+   void setAmbient( const ColorF &ambient );
+
    ///
    void animate( F32 duration, F32 startAzimuth, F32 endAzimuth, F32 startElevation, F32 endElevation );
 };
