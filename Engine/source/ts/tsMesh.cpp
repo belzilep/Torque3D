@@ -167,14 +167,14 @@ void TSMesh::innerRender( TSMaterialList *materials, const TSRenderState &rdata,
    MeshRenderInst *coreRI = renderPass->allocInst<MeshRenderInst>();
    coreRI->type = RenderPassManager::RIT_Mesh;
 
+   // FlyingSquirrels // PLB
+   coreRI->mTimer = rdata.getTimer();
+   coreRI->mActivationPos = rdata.getActivationPos();
    // FlyingSquirrels //AH
    TSRenderState rdata1 = rdata;
    rdata1.setFactorAlphaLOD(factor);
    rdata1.setSceneState(state);
-   // FlyingSquirrels //PLB
-   coreRI->mTimer = rdata1.getTimer();
    coreRI->mFactorAlphaLOD = rdata1.getFactorAlphaLOD();
-   coreRI->mActivationPos = rdata1.getActivationPos();
 
    const MatrixF &objToWorld = GFX->getWorldMatrix();
    
