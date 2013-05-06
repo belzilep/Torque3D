@@ -63,6 +63,9 @@
 // All player objects on the client side
 std::vector<Player*> Player::mClientSidePlayers;
 
+//  [5/3/2013 belk2407] Lights are off or on, for IA
+bool Player::mLightsOff = false;
+
 // Amount of time if takes to transition to a new action sequence.
 static F32 sAnimationTransitionTime = 0.25f;
 static bool sUseAnimationTransitions = true;
@@ -6575,11 +6578,18 @@ DefineEngineMethod( Player, activateIK, void, ( ),,
 	object->activateIK();
 }
 
-DefineEngineMethod( Player, desactivateIK, void, ( ),,
+DefineEngineMethod( Player, deactivateIK, void, ( ),,
 	"@brief Deactivate inverse kinematics.\n\n"
 	"Deactivate inverse kinematics." )
 {
 	object->deactivateIK();
+}
+
+DefineEngineMethod( Player, setLightsOff, void, (bool lightsOff),,
+	"@brief Deactivate inverse kinematics.\n\n"
+	"Deactivate inverse kinematics." )
+{
+	object->setLightsOff(lightsOff);
 }
 
 //----------------------------------------------------------------------------
@@ -7056,4 +7066,9 @@ void Player::deactivateIK()
 bool Player::isDead()
 {
 	return ( mDamageState == Disabled || mDamageState == Destroyed );
+}
+
+void Player::setLightsOff(bool lightsOff)
+{
+	mLightsOff = lightsOff;
 }

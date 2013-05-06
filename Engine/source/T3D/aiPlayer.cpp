@@ -456,6 +456,12 @@ bool AIPlayer::getAIMove(Move *movePtr)
    for( int i = 0; i < MaxTriggerKeys; i++ )
       movePtr->trigger[i] = getImageTriggerState(i);
 
+   if (isLightsOff())
+   {
+	   //  [5/3/2013 belk2407] if lights are off tell soldiers to crouch
+	   movePtr->trigger[3] = true;
+   }
+
    mLastLocation = location;
 
    if (isServerObject())

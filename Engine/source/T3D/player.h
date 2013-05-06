@@ -384,6 +384,8 @@ class Player: public ShapeBase
 
    static std::vector<Player*>	mClientSidePlayers;
 
+   static bool	mLightsOff;
+
 public:
    enum Pose {
       StandPose = 0,
@@ -792,6 +794,9 @@ public:
    void deactivateIK();
 
    bool isDead();
+
+   void setLightsOff(bool lightsOff);
+   bool isLightsOff() {return mLightsOff;}
 };
 
 typedef Player::Pose PlayerPose;
