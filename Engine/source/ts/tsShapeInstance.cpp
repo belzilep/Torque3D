@@ -488,7 +488,6 @@ void TSShapeInstance::render( const TSRenderState &rdata )
 
 
    F32 factor = 1.0;
-   //Con::printf("Est ce que c'est vrai ? %i", mShape->getLODRenderDetail() == TSShape::Detailled);
    // Trouver la bonne transition si il existe un LOD
 	if ( mCurrentDetailLevelPerso < mShape->getTransitionTime().size() )
 	{
@@ -496,9 +495,7 @@ void TSShapeInstance::render( const TSRenderState &rdata )
 		// ENFIN TROUVÉ CETTE POSITION !!!
 		const MatrixF &objToWorld = GFX->getWorldMatrix();
 		Point3F posObj = objToWorld.getPosition();
-		//Con::printf("Position dasdasdaeawdsd ? %f %f %f", posObj.x, posObj.y, posObj.z);
 		/**** Test pour trouver la position de la caméra *********/
-		// get the projected size...
 		GameConnection* connection = GameConnection::getConnectionToServer();
 		if(!connection)
 			return;
@@ -508,7 +505,6 @@ void TSShapeInstance::render( const TSRenderState &rdata )
 		Point3F posCam;
 		// Get the camera position
 		mat.getColumn(3,&posCam);
-		//Con::printf("Position dasdasdaeawdsd ? %f %f %f", posCam.x, posCam.y, posCam.z);
 		F32 distanceAffichage = (posObj - posCam).len();
 
 		// FlyingSquirrels // AH
@@ -520,24 +516,19 @@ void TSShapeInstance::render( const TSRenderState &rdata )
 				mCurrentDetailLevelPerso = i;
 			}
 		}
-		//const TSObject * object = &mShape->objects[mCurrentDetailLevel];
 		
 		//Con::printf("Nom de l'objet affiche est mCurrentDetailLevelPerso : %i ", mCurrentDetailLevelPerso);
-// 		Con::printf("--- AH --- TSSapeInstance::Render --- mCurrentDetailLevel : %i", mCurrentDetailLevel);
-		
-		//Con::printf("Distance ? %f", distanceAffichage);
 		if (mCurrentDetailLevelPerso < mShape->getTransitionTime().size())
 		{
 			U32 beginTransition = mShape->getTransitionTime().at(mCurrentDetailLevelPerso);
 			U32 endTransition = mShape->getTransitionTime().back() == beginTransition ? mShape->getTransitionTime().back()*2 : mShape->getTransitionTime().at(mCurrentDetailLevelPerso+1);
-			//if (mShape->getTransitionTime().back() == beginTransition)
-				//Con::printf("Bordel de foutre de bite poilu : %i", beginTransition);
+
 			if (endTransition != mShape->getTransitionTime().back()*2)
 			{
 				// Calculer la partie sequentielle
 				// Calculer la distance d'apparition
 				U32 test = endTransition - beginTransition;
-				U32 addSample = test / 20;
+				U32 addSample = test / 10;
 				test /= 2;
 				beginTransition += test + addSample;
 				endTransition -= test + addSample;
@@ -551,14 +542,8 @@ void TSShapeInstance::render( const TSRenderState &rdata )
 				if (factorAffichage > factor1 && factor1 >= 0.0)
 				{
 					factor = factor1 / factorAffichage;
-						render( rdata, mCurrentDetailLevelPerso+1, 0.0, factor*2);
-// 						if (lodRendered_ == mCurrentDetailLevel)
-// 						{
-// 							mCurrentDetailLevel = mCurrentDetailLevel + 1;
-// 							factor = 1 - factor;
-// 						}
-// 						lodRendered_ = mCurrentDetailLevel;
-					factor = 1 - (factor/1.5);
+					render( rdata, mCurrentDetailLevelPerso+1, 0.0, factor);
+					factor = 1 - (factor);
 				}
 				else if (distanceAffichage > beginTransition)
 				{
@@ -569,7 +554,7 @@ void TSShapeInstance::render( const TSRenderState &rdata )
 		render( rdata, mCurrentDetailLevelPerso, 0.0, factor);
 	}
    else
-	   render( rdata, mCurrentDetailLevelPerso, 0.0, factor);
+	   render( rdata, mCurrentDetailLevel, 0.0, factor);
 
    /// This first case is the single detail level render.
 //   if ( mCurrentIntraDetailLevel > alphaIn + alphaOut )
