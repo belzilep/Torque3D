@@ -265,29 +265,12 @@ void TSShapeInstance::animateNodes(S32 ss)
    if (mShapeBase && reinterpret_cast<ShapeBaseData *>(mShapeBase->getDataBlock())->IKisActive)
    {
 	   animateHead();
-   }   
-
-   /*for (U32 i = 0; i < getShape()->nodes.size(); i++)
-   {
-	   if (mShapeBase && getShape()->getNodeName(i) == String("Bip001_Ponytail1") )
-	   {
-		   Point3F curEnd = mNodeTransforms[i].getPosition();
-		   Con::printf("Position of Bip001_Ponytail1 %f %f %f", curEnd.x, curEnd.y, curEnd.z);
-		   TSStatic* mycube = reinterpret_cast<TSStatic *>(Sim::findObject("mycube"));
-		   if (!mycube)
-		   {
-			   break;
-		   }
-		   MatrixF shapeInvTransform = mShapeBase->getTransform();
-		   shapeInvTransform.mulP(curEnd);
-		   mycube->setPosition(curEnd);
-	   }
-   }*/
+   }
 }
 
 void TSShapeInstance::animateHead()
 {	
-	static const F32 radiansPerSecond = M_PI_F / 4.0f;
+	static const F32 radiansPerSecond = M_PI_F / 6.0f;
 	static const F32 percentageRemRot = 0.3f;
 	static const F32 minTargetDistSquared = 200.0f;
 	
@@ -313,19 +296,19 @@ void TSShapeInstance::animateHead()
 					mIKnodes.push_back(node); //Bip001_Ponytail1
 
 					node.index = mShape->nodes[node.index].parentIndex;
-					node.dof = EulerF(M_PI_F/3.0f, 0.0f, M_PI_F/3.0f);
+					node.dof = EulerF(M_PI_F/2.0f, 0.0f, M_PI_F/2.0f);
 					node.lastRotation = EulerF(0.0f);
 					mIKnodes.push_back(node); // Bip001_Head	
 
 					node.index = mShape->nodes[node.index].parentIndex;
-					node.dof = EulerF(M_PI_F/4.0f, 0.0f, M_PI_F/4.0f);
+					node.dof = EulerF(M_PI_F/2.0f, 0.0f, M_PI_F/2.0f);
 					node.lastRotation = EulerF(0.0f);
 					mIKnodes.push_back(node); // Bip001_Neck2
 
 					/*node.index = mShape->nodes[node.index].parentIndex;
-					node.dof = EulerF(M_PI_F/8.0f, 0.0f, M_PI_F/2.0f);
+					node.dof = EulerF(M_PI_F/3.0f, 0.0f, M_PI_F/3.0f);
 					node.lastRotation = EulerF(0.0f);
-					mIKnodes.push_back(node); // Bip001_Neck1*/
+					mIKnodes.push_back(node);*/ // Bip001_Neck1
 
 					break;
 				}
@@ -363,7 +346,11 @@ void TSShapeInstance::animateHead()
 							// check if target is behind player
 							if (cosAngle > 0.2f)
 							{
-								desiredEnd = players[i]->getPosition();
+								MatrixF playerEyeTransform;
+								players[i]->getEyeTransform(&playerEyeTransform);
+								Point3F playerEyePosition = playerEyeTransform.getPosition();
+
+								desiredEnd = playerEyePosition;
 								desiredEndDistance = distance;
 								hasTarget = true;
 							}							
@@ -378,7 +365,7 @@ void TSShapeInstance::animateHead()
 				MatrixF shapeInvTransform = mShapeBase->getTransform();
 				shapeInvTransform.inverse();
 				shapeInvTransform.mulP(desiredEnd);
-			}			
+			}
 
 			F32 allowedRadiansPerFrame = (radiansPerSecond * (F32)mUpdateTimer->getElapsedMs() / 1000.0f);
 			mUpdateTimer->reset(); // reset the timer
@@ -445,7 +432,7 @@ void TSShapeInstance::animateHead()
 
 
 					finalNeededRotation.x = angleBetween(curVectorZ, targetVectorZ, 1.0);
-					//totalNeededRotation.y = angleBetween(curVectorY, targetVectorY, 1.0);
+					finalNeededRotation.y = angleBetween(curVectorY, targetVectorY, -1.0);
 					finalNeededRotation.z = angleBetween(curVectorX, targetVectorX, -1.0);
 				}
 				
@@ -457,19 +444,53 @@ void TSShapeInstance::animateHead()
 
 				auto getRotationAngle = [&] (F32 finalNeededRotation, F32 lastRotation) -> F32
 				{
-					F32 rotDir = (finalNeededRotation < 0.0f) ? -1.0f : 1.0f ;
+					F32 rotDir;
 
-					F32 remainingRadians = finalNeededRotation - ( rotDir * allowedRadiansPerFrame + lastRotation);
+					if (finalNeededRotation < 0.0f)
+					{
+						rotDir = -1.0f;
+					}
+					else if (finalNeededRotation > 0.0f)
+					{
+						rotDir = 1.0f;
+					}
+					else // finalNeededRotation == 0.0
+					{
+						// go to the opposite side of the last rotation
+						if (lastRotation < 0.0f)
+						{
+							rotDir = 1.0f;
+						}
+						else
+						{
+							rotDir = -1.0f;
+						}
+					}
+
+					//F32 remainingRadians = finalNeededRotation - ( rotDir * allowedRadiansPerFrame + lastRotation);					
 
 					bool exceedsNeededRotation;
 
 					if (finalNeededRotation < 0.0f)
 					{
-						exceedsNeededRotation = (rotDir * allowedRadiansPerFrame + lastRotation + remainingRadians * percentageRemRot > finalNeededRotation ) ? false : true;
+						//exceedsNeededRotation = ((rotDir * allowedRadiansPerFrame + lastRotation + remainingRadians * percentageRemRot) > finalNeededRotation ) ? false : true;
+						exceedsNeededRotation = ((rotDir * allowedRadiansPerFrame + lastRotation  ) > finalNeededRotation ) ? false : true;
 					}
-					else
+					else if (finalNeededRotation > 0.0f)
 					{
-						exceedsNeededRotation = (rotDir * allowedRadiansPerFrame + lastRotation + remainingRadians * percentageRemRot < finalNeededRotation ) ? false : true;
+						//exceedsNeededRotation = ((rotDir * allowedRadiansPerFrame + lastRotation + remainingRadians * percentageRemRot) < finalNeededRotation ) ? false : true;
+						exceedsNeededRotation = ((rotDir * allowedRadiansPerFrame + lastRotation ) < finalNeededRotation ) ? false : true;
+					}
+					else // finalNeededRotation == 0.0f
+					{
+						if ((rotDir * allowedRadiansPerFrame + lastRotation ) * lastRotation <= 0.0f) // the sign changed or is zero
+						{
+							exceedsNeededRotation = true;
+						}
+						else
+						{
+							exceedsNeededRotation = false;
+						}
 					}
 
 					if (! exceedsNeededRotation)
@@ -483,17 +504,17 @@ void TSShapeInstance::animateHead()
 				};
 
 				nodeCurrentRotation.x = getRotationAngle(finalNeededRotation.x, mIKnodes[i].lastRotation.x);
-				//nodeCurrentRotation.y = getRotationAngle(finalNeededRotation.y, mIKnodes[i].lastRotation.y);
+				nodeCurrentRotation.y = getRotationAngle(finalNeededRotation.y, mIKnodes[i].lastRotation.y);
 				nodeCurrentRotation.z = getRotationAngle(finalNeededRotation.z, mIKnodes[i].lastRotation.z);
 
 
-				// Clamp values (we never know)
+				// Clamp values (because we never know)
 				nodeCurrentRotation.x = mClampF(nodeCurrentRotation.x, -mIKnodes[i].dof.x, mIKnodes[i].dof.x );
 				nodeCurrentRotation.y = mClampF(nodeCurrentRotation.y, -mIKnodes[i].dof.y, mIKnodes[i].dof.y );
 				nodeCurrentRotation.z = mClampF(nodeCurrentRotation.z, -mIKnodes[i].dof.z, mIKnodes[i].dof.z );
 
 				// add the current rotation to the others
-				mIKnodes[i].lastRotation = nodeCurrentRotation;				
+				mIKnodes[i].lastRotation = nodeCurrentRotation;
 
 				// Apply the rotation to the current node
 				smNodeCurrentRotations[mIKnodes[i].index] = QuatF(nodeCurrentRotation);		
@@ -504,9 +525,9 @@ void TSShapeInstance::animateHead()
 				for (int j = i - 1; j >= 0; j--)
 				{
 					mNodeTransforms[mIKnodes[j].index].mul(mNodeTransforms[mIKnodes[j+1].index],smNodeLocalTransforms[mIKnodes[j].index]);
-				}				
+				}
 			}
-		}		
+		}
 	} 	
 }
 
@@ -1849,6 +1870,244 @@ void TSShapeInstance::animateHead()
 				{
 					mNodeTransforms[mIKnodes[j].index].mul(mNodeTransforms[mIKnodes[j+1].index],smNodeLocalTransforms[mIKnodes[j].index]);
 				}* /
+			}
+		}		
+	} 	
+}*/
+
+
+
+/*
+void TSShapeInstance::animateHead()
+{	
+	static const F32 radiansPerSecond = M_PI_F / 4.0f;
+	static const F32 percentageRemRot = 0.3f;
+	static const F32 minTargetDistSquared = 200.0f;
+	
+	if (!mUpdateTimer)
+	{
+		mUpdateTimer = PlatformTimer::create();
+	}
+
+	if (mShapeBase)
+	{ 
+		if (mIKnodes.empty())
+		{
+			// fill the static vector for the first and only time
+			for (U32 i = 0; i < getShape()->nodes.size(); i++)
+			{
+				if (getShape()->getNodeName(i) == String("Bip001_Ponytail1") )
+				{
+					MyNode node;
+
+					node.index = i;
+					node.dof = EulerF(0.0f);
+					node.lastRotation = EulerF(0.0f);
+					mIKnodes.push_back(node); //Bip001_Ponytail1
+
+					node.index = mShape->nodes[node.index].parentIndex;
+					node.dof = EulerF(M_PI_F/3.0f, 0.0f, M_PI_F/3.0f);
+					node.lastRotation = EulerF(0.0f);
+					mIKnodes.push_back(node); // Bip001_Head	
+
+					node.index = mShape->nodes[node.index].parentIndex;
+					node.dof = EulerF(M_PI_F/3.0f, 0.0f, M_PI_F/3.0f);
+					node.lastRotation = EulerF(0.0f);
+					mIKnodes.push_back(node); // Bip001_Neck2
+
+					/ *node.index = mShape->nodes[node.index].parentIndex;
+					node.dof = EulerF(M_PI_F/3.0f, 0.0f, M_PI_F/3.0f);
+					node.lastRotation = EulerF(0.0f);
+					mIKnodes.push_back(node);* / // Bip001_Neck1
+
+					break;
+				}
+			}
+		} 
+		else
+		{
+			//MatrixF nodeTransform;
+			Point3F desiredEnd = Point3F(0.0f);
+			bool hasTarget = false;
+
+			//Con::printf("Animating the head of %d", this);
+			//Con::printf("Position of Bip001_Ponytail1 %f %f %f", curEnd.x, curEnd.y, curEnd.z);
+
+			// Search for the nearest player to look at
+			{			
+				auto players = Player::getClientSidePlayers();
+				F32 desiredEndDistance = std::numeric_limits<F32>::max();
+
+				for (int i=0; i < players.size(); ++i)
+				{
+					if (players[i] != mShapeBase)
+					{
+						F32 distance = Point3F(players[i]->getPosition() - mShapeBase->getPosition()).lenSquared();
+						
+						if (distance < minTargetDistSquared && distance < desiredEndDistance)
+						{
+							Point3F shapeToPlayer = players[i]->getPosition() - mShapeBase->getTransform().getPosition();
+							shapeToPlayer.normalizeSafe();
+							Point3F shapeForward = mShapeBase->getTransform().getForwardVector();
+							shapeForward.normalizeSafe();
+
+							auto cosAngle = mDot(shapeToPlayer, shapeForward);
+
+							// check if target is behind player
+							if (cosAngle > 0.2f)
+							{
+								MatrixF playerEyeTransform;
+								players[i]->getEyeTransform(&playerEyeTransform);
+								Point3F playerEyePosition = playerEyeTransform.getPosition();
+
+								desiredEnd = playerEyePosition;
+								desiredEndDistance = distance;
+								hasTarget = true;
+							}							
+						}
+					}
+				}
+			}
+
+			if (hasTarget)
+			{
+				// transform target position from world reference to shape position
+				MatrixF shapeInvTransform = mShapeBase->getTransform();
+				shapeInvTransform.inverse();
+				shapeInvTransform.mulP(desiredEnd);
+			}		
+			else
+			{
+				int test = 0;
+			}
+
+			F32 allowedRadiansPerFrame = (radiansPerSecond * (F32)mUpdateTimer->getElapsedMs() / 1000.0f);
+			mUpdateTimer->reset(); // reset the timer
+
+			for (int i = 1; i < mIKnodes.size(); i++)
+			{
+				Point3F rootPos,curVector, targetVector,curEnd;
+				EulerF nodeCurrentRotation(0.0f);
+				EulerF finalNeededRotation(0.0f);
+
+				if (hasTarget)
+				{
+					// POSITION OF THE END EFFECTOR
+					curEnd = mNodeTransforms[mIKnodes[0].index].getPosition();
+
+					// THE POSITION OF THE ROOT OF THIS BONE
+					rootPos = mNodeTransforms[mIKnodes[i].index].getPosition();
+
+					// CREATE THE VECTOR TO THE CURRENT EFFECTOR POS
+					curVector = curEnd - rootPos;
+
+					// CREATE THE DESIRED EFFECTOR POSITION VECTOR
+					targetVector = desiredEnd - rootPos;
+
+					Point3F curVectorX = curVector;
+					curVectorX.x = 0.0f;
+
+					Point3F curVectorY = curVector;
+					curVectorY.y = 0.0f;
+
+					Point3F curVectorZ = curVector;
+					curVectorZ.z = 0.0f;
+
+					Point3F targetVectorX = targetVector;
+					targetVectorX.x = 0.0f;
+
+					Point3F targetVectorY = targetVector;
+					targetVectorY.y = 0.0f;
+
+					Point3F targetVectorZ = targetVector;
+					targetVectorZ.z = 0.0f;
+
+					auto angleBetween = [] (Point3F &v, Point3F &w, F32 sign) -> F32
+					{
+						v.normalize();
+						w.normalize();
+
+						auto cosAngle = mDot(v, w);
+
+						Point3F crossResult = mCross(v, w);
+
+						F32 factor = crossResult.x + crossResult.y + crossResult.z;
+
+						if (factor < 0.0f)
+						{
+							return -mAcos(cosAngle) * sign;
+						}
+						else
+						{
+							return mAcos(cosAngle) * sign;
+						}
+
+					};
+
+
+					finalNeededRotation.x = angleBetween(curVectorZ, targetVectorZ, 1.0);
+					finalNeededRotation.y = angleBetween(curVectorY, targetVectorY, -1.0);
+					finalNeededRotation.z = angleBetween(curVectorX, targetVectorX, -1.0);
+				}
+				
+
+				// Degree Of Freedom control
+				finalNeededRotation.x = (finalNeededRotation.x > mIKnodes[i].dof.x) ? mIKnodes[i].dof.x : ((finalNeededRotation.x < -mIKnodes[i].dof.x) ? -mIKnodes[i].dof.x : finalNeededRotation.x);
+				finalNeededRotation.y = (finalNeededRotation.y > mIKnodes[i].dof.y) ? mIKnodes[i].dof.y : ((finalNeededRotation.y < -mIKnodes[i].dof.y) ? -mIKnodes[i].dof.y : finalNeededRotation.y);
+				finalNeededRotation.z = (finalNeededRotation.z > mIKnodes[i].dof.z) ? mIKnodes[i].dof.z : ((finalNeededRotation.z < -mIKnodes[i].dof.z) ? -mIKnodes[i].dof.z : finalNeededRotation.z);
+
+				auto getRotationAngle = [&] (F32 finalNeededRotation, F32 lastRotation) -> F32
+				{
+					F32 rotDir = (finalNeededRotation < 0.0f) ? -1.0f : 1.0f ;
+
+					/ *F32 remainingRadians = finalNeededRotation - ( rotDir * allowedRadiansPerFrame + lastRotation);* /
+
+					bool exceedsNeededRotation;
+
+					if (finalNeededRotation < 0.0f)
+					{
+						//exceedsNeededRotation = ((rotDir * allowedRadiansPerFrame + lastRotation + remainingRadians * percentageRemRot) > finalNeededRotation ) ? false : true;
+						exceedsNeededRotation = ((rotDir * allowedRadiansPerFrame + lastRotation  ) > finalNeededRotation ) ? false : true;
+					}
+					else
+					{
+						//exceedsNeededRotation = ((rotDir * allowedRadiansPerFrame + lastRotation + remainingRadians * percentageRemRot) < finalNeededRotation ) ? false : true;
+						exceedsNeededRotation = ((rotDir * allowedRadiansPerFrame + lastRotation ) < finalNeededRotation ) ? false : true;
+					}
+
+					if (! exceedsNeededRotation)
+					{
+						return (rotDir * allowedRadiansPerFrame + lastRotation);
+					}
+					else
+					{
+						return finalNeededRotation;
+					}
+				};
+
+				nodeCurrentRotation.x = getRotationAngle(finalNeededRotation.x, mIKnodes[i].lastRotation.x);
+				nodeCurrentRotation.y = getRotationAngle(finalNeededRotation.y, mIKnodes[i].lastRotation.y);
+				nodeCurrentRotation.z = getRotationAngle(finalNeededRotation.z, mIKnodes[i].lastRotation.z);
+
+
+				// Clamp values (because we never know)
+				nodeCurrentRotation.x = mClampF(nodeCurrentRotation.x, -mIKnodes[i].dof.x, mIKnodes[i].dof.x );
+				nodeCurrentRotation.y = mClampF(nodeCurrentRotation.y, -mIKnodes[i].dof.y, mIKnodes[i].dof.y );
+				nodeCurrentRotation.z = mClampF(nodeCurrentRotation.z, -mIKnodes[i].dof.z, mIKnodes[i].dof.z );
+
+				// add the current rotation to the others
+				mIKnodes[i].lastRotation = nodeCurrentRotation;			
+
+				// Apply the rotation to the current node
+				smNodeCurrentRotations[mIKnodes[i].index] = QuatF(nodeCurrentRotation);		
+				TSTransform::setMatrix(smNodeCurrentRotations[mIKnodes[i].index], smNodeCurrentTranslations[mIKnodes[i].index], &smNodeLocalTransforms[mIKnodes[i].index]);
+				mNodeTransforms[mIKnodes[i].index].mul(mNodeTransforms[mShape->nodes[mIKnodes[i].index].parentIndex],smNodeLocalTransforms[mIKnodes[i].index]);
+
+				// update transforms
+				for (int j = i - 1; j >= 0; j--)
+				{
+					mNodeTransforms[mIKnodes[j].index].mul(mNodeTransforms[mIKnodes[j+1].index],smNodeLocalTransforms[mIKnodes[j].index]);
+				}				
 			}
 		}		
 	} 	
