@@ -97,6 +97,7 @@ void _initShaderGenHLSL( ShaderGen *shaderGen )
 
    //  [4/16/2013 belp1710]
    FEATUREMGR->registerFeature( MFT_Fur, new FurFeatureHLSL );
+   FEATUREMGR->registerFeature( MFT_Vert_Translate, new VertTranslateFeatureHLSL );
 
    FEATUREMGR->registerFeature( MFT_Layer0, new Layer0FeatHLSL );
    FEATUREMGR->registerFeature( MFT_Layer1, new Layer1FeatHLSL );
@@ -114,6 +115,22 @@ void _initShaderGenHLSL( ShaderGen *shaderGen )
    FEATUREMGR->registerFeature( MFT_Layer13, new Layer13FeatHLSL );
    FEATUREMGR->registerFeature( MFT_Layer14, new Layer14FeatHLSL );
    FEATUREMGR->registerFeature( MFT_Layer15, new Layer15FeatHLSL );
+   FEATUREMGR->registerFeature( MFT_Layer16, new Layer16FeatHLSL );
+   FEATUREMGR->registerFeature( MFT_Layer17, new Layer17FeatHLSL );
+   FEATUREMGR->registerFeature( MFT_Layer18, new Layer18FeatHLSL );
+   FEATUREMGR->registerFeature( MFT_Layer19, new Layer19FeatHLSL );
+   FEATUREMGR->registerFeature( MFT_Layer20, new Layer20FeatHLSL );
+   FEATUREMGR->registerFeature( MFT_Layer21, new Layer21FeatHLSL );
+   FEATUREMGR->registerFeature( MFT_Layer22, new Layer22FeatHLSL );
+   FEATUREMGR->registerFeature( MFT_Layer23, new Layer23FeatHLSL );
+   FEATUREMGR->registerFeature( MFT_Layer24, new Layer24FeatHLSL );
+   FEATUREMGR->registerFeature( MFT_Layer25, new Layer25FeatHLSL );
+   FEATUREMGR->registerFeature( MFT_Layer26, new Layer26FeatHLSL );
+   FEATUREMGR->registerFeature( MFT_Layer27, new Layer27FeatHLSL );
+   FEATUREMGR->registerFeature( MFT_Layer28, new Layer28FeatHLSL );
+   FEATUREMGR->registerFeature( MFT_Layer29, new Layer29FeatHLSL );
+   FEATUREMGR->registerFeature( MFT_Layer30, new Layer30FeatHLSL );
+   FEATUREMGR->registerFeature( MFT_Layer31, new Layer31FeatHLSL );
 }
 
 MODULE_BEGIN( ShaderGenHLSL )

@@ -208,8 +208,6 @@ public:
 /// Vertex position
 class VertPositionHLSL : public ShaderFeatureHLSL
 {
-private:
-	U32 mStage;
 public:
    virtual void processVert( Vector<ShaderComponent*> &componentList,
                              const MaterialFeatureData &fd );
@@ -703,6 +701,27 @@ public:
 	virtual void processPix( Vector<ShaderComponent*> &componentList, const MaterialFeatureData &fd );
 };
 
+class VertTranslateFeatureHLSL : public ShaderFeatureHLSL
+{
+private:
+	U32 mStage;
+public:
+	virtual String getName()
+	{
+		return "Vertex Translation";
+	}
+
+	virtual void determineFeature(   Material *material,
+		const GFXVertexFormat *vertexFormat,
+		U32 stageNum,
+		const FeatureType &type,
+		const FeatureSet &features,
+		MaterialFeatureData *outFeatureData );
+
+	virtual void processVert(  Vector<ShaderComponent*> &componentList,
+		const MaterialFeatureData &fd );
+};
+
 class Layer0FeatHLSL : public ShaderFeatureHLSL
 {
 public:
@@ -844,6 +863,150 @@ public:
 	virtual String getName()
 	{
 		return "Layer 15";
+	}
+};
+
+class Layer16FeatHLSL : public ShaderFeatureHLSL
+{
+public:
+	virtual String getName()
+	{
+		return "Layer 16";
+	}
+};
+
+class Layer17FeatHLSL : public ShaderFeatureHLSL
+{
+public:
+	virtual String getName()
+	{
+		return "Layer 17";
+	}
+};
+
+class Layer18FeatHLSL : public ShaderFeatureHLSL
+{
+public:
+	virtual String getName()
+	{
+		return "Layer 18";
+	}
+};
+
+class Layer19FeatHLSL : public ShaderFeatureHLSL
+{
+public:
+	virtual String getName()
+	{
+		return "Layer 19";
+	}
+};
+
+class Layer20FeatHLSL : public ShaderFeatureHLSL
+{
+public:
+	virtual String getName()
+	{
+		return "Layer 20";
+	}
+};
+
+class Layer21FeatHLSL : public ShaderFeatureHLSL
+{
+public:
+	virtual String getName()
+	{
+		return "Layer 21";
+	}
+};
+
+class Layer22FeatHLSL : public ShaderFeatureHLSL
+{
+public:
+	virtual String getName()
+	{
+		return "Layer 22";
+	}
+};
+
+class Layer23FeatHLSL : public ShaderFeatureHLSL
+{
+public:
+	virtual String getName()
+	{
+		return "Layer 23";
+	}
+};
+
+class Layer24FeatHLSL : public ShaderFeatureHLSL
+{
+public:
+	virtual String getName()
+	{
+		return "Layer 24";
+	}
+};
+
+class Layer25FeatHLSL : public ShaderFeatureHLSL
+{
+public:
+	virtual String getName()
+	{
+		return "Layer 25";
+	}
+};
+
+class Layer26FeatHLSL : public ShaderFeatureHLSL
+{
+public:
+	virtual String getName()
+	{
+		return "Layer 26";
+	}
+};
+
+class Layer27FeatHLSL : public ShaderFeatureHLSL
+{
+public:
+	virtual String getName()
+	{
+		return "Layer 27";
+	}
+};
+
+class Layer28FeatHLSL : public ShaderFeatureHLSL
+{
+public:
+	virtual String getName()
+	{
+		return "Layer 28";
+	}
+};
+
+class Layer29FeatHLSL : public ShaderFeatureHLSL
+{
+public:
+	virtual String getName()
+	{
+		return "Layer 29";
+	}
+};
+
+class Layer30FeatHLSL : public ShaderFeatureHLSL
+{
+public:
+	virtual String getName()
+	{
+		return "Layer 30";
+	}
+};
+
+class Layer31FeatHLSL : public ShaderFeatureHLSL
+{
+public:
+	virtual String getName()
+	{
+		return "Layer 31";
 	}
 };
 

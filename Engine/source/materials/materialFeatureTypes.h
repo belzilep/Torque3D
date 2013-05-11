@@ -175,6 +175,7 @@ DeclareFeatureType( MFT_ImposterVert );
 
 //  [4/15/2013 belp1710]
 DeclareFeatureType( MFT_Fur );
+DeclareFeatureType( MFT_Vert_Translate );
 
 DeclareFeatureType( MFT_Layer0 );
 DeclareFeatureType( MFT_Layer1 );
@@ -192,5 +193,21 @@ DeclareFeatureType( MFT_Layer12 );
 DeclareFeatureType( MFT_Layer13 );
 DeclareFeatureType( MFT_Layer14 );
 DeclareFeatureType( MFT_Layer15 );
+DeclareFeatureType( MFT_Layer16 );
+DeclareFeatureType( MFT_Layer17 );
+DeclareFeatureType( MFT_Layer18 );
+DeclareFeatureType( MFT_Layer19 );
+DeclareFeatureType( MFT_Layer20 );
+DeclareFeatureType( MFT_Layer21 );
+DeclareFeatureType( MFT_Layer22 );
+DeclareFeatureType( MFT_Layer23 );
+DeclareFeatureType( MFT_Layer24 );
+DeclareFeatureType( MFT_Layer25 );
+DeclareFeatureType( MFT_Layer26 );
+DeclareFeatureType( MFT_Layer27 );
+DeclareFeatureType( MFT_Layer28 );
+DeclareFeatureType( MFT_Layer29 );
+DeclareFeatureType( MFT_Layer30 );
+DeclareFeatureType( MFT_Layer31 );
 
 #endif // _MATERIALFEATURETYPES_H_

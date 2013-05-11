@@ -1593,10 +1593,6 @@ void VertPositionHLSL::determineFeature(  Material *material,
 {
    // This feature is always on!
    outFeatureData->features.addFeature( type );
-
-   //  [4/18/2013 belp1710]
-   if(outFeatureData->features.hasFeature(MFT_Fur))
-      mStage = stageNum;
 }
 
 void VertPositionHLSL::processVert( Vector<ShaderComponent*> &componentList, 
@@ -1617,14 +1613,6 @@ void VertPositionHLSL::processVert( Vector<ShaderComponent*> &componentList,
    MultiLine *meta = new MultiLine;
 
    Var *modelview = getModelView( componentList, fd.features[MFT_UseInstancing], meta ); 
-
-   //  [4/17/2013 belp1710]
-   if(fd.features.hasFeature(MFT_Fur) && mStage)
-   {
-	   Var *normal = (Var*)LangElement::find( "normal" );
-	   String statement = "   @ += 0.005 * " + String::ToString(mStage) + " * normalize(@);\r\n";
-	   meta->addStatement( new GenOp( statement, inPosition, normal ) );
-   }
 
    meta->addStatement( new GenOp( "   @ = mul(@, float4(@,1));\r\n", 
 	   outPosition, modelview, inPosition ) );
@@ -2784,7 +2772,6 @@ void FurFeatureHLSL::processPix( Vector<ShaderComponent*> &componentList, const 
 
 	MultiLine *meta = new MultiLine;
 	LangElement *statement = new GenOp( "tex2D(@, @).r", furMap, inTex );
-	//meta->addStatement(new GenOp( "   @.rgb *= 2;\r\n", color ));
 	meta->addStatement(new GenOp( "   @.a *= @;\r\n", color, statement ));
 
 	output = meta;
@@ -2818,6 +2805,7 @@ void FurFeatureHLSL::determineFeature(  Material *material,
 {
 	if(outFeatureData->features.hasFeature(MFT_Fur))
 	{
+		outFeatureData->features.removeFeature( MFT_RTLighting );
 		switch(stageNum)
 		{
 		case 0:
@@ -2868,6 +2856,91 @@ void FurFeatureHLSL::determineFeature(  Material *material,
 		case 15:
 			outFeatureData->features.addFeature( MFT_Layer15 );
 			break;
+		case 16:
+			outFeatureData->features.addFeature( MFT_Layer16 );
+			break;
+		case 17:
+			outFeatureData->features.addFeature( MFT_Layer17 );
+			break;
+		case 18:
+			outFeatureData->features.addFeature( MFT_Layer18 );
+			break;
+		case 19:
+			outFeatureData->features.addFeature( MFT_Layer19 );
+			break;
+		case 20:
+			outFeatureData->features.addFeature( MFT_Layer20 );
+			break;
+		case 21:
+			outFeatureData->features.addFeature( MFT_Layer21 );
+			break;
+		case 22:
+			outFeatureData->features.addFeature( MFT_Layer22 );
+			break;
+		case 23:
+			outFeatureData->features.addFeature( MFT_Layer23 );
+			break;
+		case 24:
+			outFeatureData->features.addFeature( MFT_Layer24 );
+			break;
+		case 25:
+			outFeatureData->features.addFeature( MFT_Layer25 );
+			break;
+		case 26:
+			outFeatureData->features.addFeature( MFT_Layer26 );
+			break;
+		case 27:
+			outFeatureData->features.addFeature( MFT_Layer27 );
+			break;
+		case 28:
+			outFeatureData->features.addFeature( MFT_Layer28 );
+			break;
+		case 29:
+			outFeatureData->features.addFeature( MFT_Layer29 );
+			break;
+		case 30:
+			outFeatureData->features.addFeature( MFT_Layer30 );
+			break;
+		case 31:
+			outFeatureData->features.addFeature( MFT_Layer31 );
+			break;
 		}
 	}
+}
+
+//****************************************************************************
+// Vertex translation
+//****************************************************************************
+
+void VertTranslateFeatureHLSL::determineFeature(  Material *material,
+                                          const GFXVertexFormat *vertexFormat,
+                                          U32 stageNum,
+                                          const FeatureType &type,
+                                          const FeatureSet &features,
+                                          MaterialFeatureData *outFeatureData )
+{
+   // This feature is always on!
+   outFeatureData->features.addFeature( type );
+   mStage = stageNum;
+}
+
+void VertTranslateFeatureHLSL::processVert( Vector<ShaderComponent*> &componentList, 
+	const MaterialFeatureData &fd )
+{
+	// First check for an input position from a previous feature
+	// then look for the default vertex position.
+	Var *inPosition = (Var*)LangElement::find( "inPosition" );
+	if ( !inPosition )
+		inPosition = (Var*)LangElement::find( "position" );
+
+	MultiLine *meta = new MultiLine;
+
+	if(mStage)
+	{
+		Var *normal = (Var*)LangElement::find( "normal" );
+		String statement = "   @ += 0.0025 * " + String::ToString(mStage) + " * normalize(@);\r\n";
+		meta->addStatement( new GenOp( statement, inPosition, normal ) );
+	}
+
+	output = meta;
 }

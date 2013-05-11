@@ -64,7 +64,7 @@ public:
    enum Constants
    {
       MAX_TEX_PER_PASS = 8,         ///< Number of textures per pass
-      MAX_STAGES = 16,
+      MAX_STAGES = 32,
       NUM_EFFECT_COLOR_STAGES = 2,  ///< Number of effect color definitions for transitioning effects.
    };
 
