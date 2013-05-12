@@ -107,6 +107,7 @@ private:
 
 	// FlyingSquirrels // AH
 	   U32 mCurrentDetailLevelPerso;
+	   S32 mCurrentDetailLevelPersoOld;
 
    struct ObjectInstance;
    friend class TSThread;

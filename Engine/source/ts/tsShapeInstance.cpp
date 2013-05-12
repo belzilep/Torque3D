@@ -222,6 +222,7 @@ void TSShapeInstance::buildInstanceData(TSShape * _shape, bool loadMaterials)
 
    mGroundThread = NULL;
    mCurrentDetailLevel = 0;
+   mCurrentDetailLevelPersoOld = -1;
 
    animateSubtrees();
 
@@ -482,9 +483,9 @@ void TSShapeInstance::render( const TSRenderState &rdata )
    // NOTE:
    //   intraDL is at 1 when if shape were any closer to us we'd be at dl-1,
    //   intraDL is at 0 when if shape were any farther away we'd be at dl+1
-//    F32 alphaOut = mShape->alphaOut[mCurrentDetailLevel];
-//    F32 alphaIn  = mShape->alphaIn[mCurrentDetailLevel];
-//    F32 saveAA = mAlphaAlways ? mAlphaAlwaysValue : 1.0f;
+   F32 alphaOut = mShape->alphaOut[mCurrentDetailLevel];
+   F32 alphaIn  = mShape->alphaIn[mCurrentDetailLevel];
+   F32 saveAA = mAlphaAlways ? mAlphaAlwaysValue : 1.0f;
 
 
    F32 factor = 1.0;
@@ -516,6 +517,8 @@ void TSShapeInstance::render( const TSRenderState &rdata )
 				mCurrentDetailLevelPerso = i;
 			}
 		}
+		if (mCurrentDetailLevelPerso > 0)
+			mCurrentDetailLevelPersoOld = mCurrentDetailLevelPerso -1;
 		
 		//Con::printf("Nom de l'objet affiche est mCurrentDetailLevelPerso : %i ", mCurrentDetailLevelPerso);
 		if (mCurrentDetailLevelPerso < mShape->getTransitionTime().size())
@@ -527,66 +530,108 @@ void TSShapeInstance::render( const TSRenderState &rdata )
 			{
 				// Calculer la partie sequentielle
 				// Calculer la distance d'apparition
-				U32 test = endTransition - beginTransition;
-				U32 addSample = test / 10;
-				test /= 2;
-				beginTransition += test + addSample;
-				endTransition -= test + addSample;
+ 				U32 test = endTransition - beginTransition;
+ 				U32 addSample = test / 10;
+ 				test /= 2;
+ 				beginTransition += test + addSample;
+ 				endTransition -= test + addSample;
+ 
+ 
+ 
+ 				// facteur d'affichage
+ 				F32 factorAffichage = beginTransition - endTransition;
+ 				F32 factor1 = distanceAffichage - endTransition;
+ 				//Con::printf("---------- Ici le factor1 est de %f  ----------", factor1);
+ 				if (factorAffichage > factor1 && factor1 >= 0.0)
+ 				{
+ 					factor = factor1 / factorAffichage;
+ 					render( rdata, mCurrentDetailLevelPerso+1, 0.0, factor);
+ 					factor = 1 - (factor);
+ 				}
+ 				else if (distanceAffichage > beginTransition)
+ 				{
+ 					mCurrentDetailLevelPersoOld = mCurrentDetailLevelPerso;
+ 					mCurrentDetailLevelPerso++;
+ 				}
+//  				if (mCurrentDetailLevelPersoOld > -1)
+//  					factor = 1 - factor;
+//  				else
+//  					factor = 1.0;
 
-
-
-				// facteur d'affichage
-				F32 factorAffichage = beginTransition - endTransition;
-				F32 factor1 = distanceAffichage - endTransition;
-				//Con::printf("---------- Ici le factor1 est de %f  ----------", factor1);
-				if (factorAffichage > factor1 && factor1 >= 0.0)
-				{
-					factor = factor1 / factorAffichage;
-					render( rdata, mCurrentDetailLevelPerso+1, 0.0, factor);
-					factor = 1 - (factor);
-				}
-				else if (distanceAffichage > beginTransition)
-				{
-					mCurrentDetailLevelPerso++;
-				}
+// 				beginTransition = endTransition - endTransition/5;
+// 				U32 endTransition2 = endTransition + endTransition/5;
+// 
+// 				
+// 				if (mCurrentDetailLevelPersoOld < 0)
+// 				{
+// 					F32 factor1 = distanceAffichage - beginTransition;
+// 					F32 factorDistance = endTransition - distanceAffichage;
+// 					F32 factor2 = distanceAffichage - endTransition;
+// 					if (factor1 >= 0.0 && factor2 <= 0.0)
+// 					{
+// 						factor = factor1 / factorDistance;
+// 						render( rdata, mCurrentDetailLevelPerso+1, 0.0, factor);
+// 						factor = 1.0;
+// 					}
+// 				}
+// 				else
+// 				{
+// 					F32 factor1 = distanceAffichage - endTransition;
+// 					F32 factorDistance = endTransition2 - distanceAffichage;
+// 					F32 factor2 = distanceAffichage - endTransition2;
+// 					if (factor1 >= 0.0 && factor2 < 0.0)
+// 					{
+// 						factor = factor1 / factorDistance;
+// 						render( rdata, mCurrentDetailLevelPersoOld, 0.0, factor);
+// 					}
+// 					if (factor2 >= 0.0)
+// 					{
+// 						mCurrentDetailLevelPersoOld = -1;
+// 					}
+// 				}
+// 				if (distanceAffichage > beginTransition)
+// 				{
+// 					mCurrentDetailLevelPersoOld = mCurrentDetailLevelPerso;
+// 					mCurrentDetailLevelPerso++;
+// 				}
 			}
 		}
 		render( rdata, mCurrentDetailLevelPerso, 0.0, factor);
 	}
-   else
-	   render( rdata, mCurrentDetailLevel, 0.0, factor);
-
+    else
+	{
    /// This first case is the single detail level render.
-//   if ( mCurrentIntraDetailLevel > alphaIn + alphaOut )
-//     render( rdata, mCurrentDetailLevel, mCurrentIntraDetailLevel, factor);
-//    else if ( mCurrentIntraDetailLevel > alphaOut )
-//    {
-//       // draw this detail level w/ alpha=1 and next detail level w/
-//       // alpha=1-(intraDl-alphaOut)/alphaIn
-// 
-//       // first draw next detail level
-//       if ( mCurrentDetailLevel + 1 < mShape->details.size() && mShape->details[ mCurrentDetailLevel + 1 ].size > 0.0f )
-//       {
-//          setAlphaAlways( saveAA * ( alphaIn + alphaOut - mCurrentIntraDetailLevel ) / alphaIn );
-//          render( rdata, mCurrentDetailLevel + 1, 0.0f, factor );
-//       }
-// 
+  if ( mCurrentIntraDetailLevel > alphaIn + alphaOut )
+    render( rdata, mCurrentDetailLevel, mCurrentIntraDetailLevel, factor);
+   else if ( mCurrentIntraDetailLevel > alphaOut )
+   {
+      // draw this detail level w/ alpha=1 and next detail level w/
+      // alpha=1-(intraDl-alphaOut)/alphaIn
+
+      // first draw next detail level
+      if ( mCurrentDetailLevel + 1 < mShape->details.size() && mShape->details[ mCurrentDetailLevel + 1 ].size > 0.0f )
+      {
+         setAlphaAlways( saveAA * ( alphaIn + alphaOut - mCurrentIntraDetailLevel ) / alphaIn );
+         render( rdata, mCurrentDetailLevel + 1, 0.0f, factor );
+      }
+
        //setAlphaAlways( saveAA );
-//       render( rdata, mCurrentDetailLevel, mCurrentIntraDetailLevel, factor );
-//    }
-//    else
-//    {
-//       // draw next detail level w/ alpha=1 and this detail level w/
-//       // alpha = 1-intraDL/alphaOut
-// 
-//       // first draw next detail level
-//       if ( mCurrentDetailLevel + 1 < mShape->details.size() && mShape->details[ mCurrentDetailLevel + 1 ].size > 0.0f )
-//          render( rdata, mCurrentDetailLevel+1, 0.0f );
-// 
-//       setAlphaAlways( saveAA * mCurrentIntraDetailLevel / alphaOut );
-//       render( rdata, mCurrentDetailLevel, mCurrentIntraDetailLevel, factor );
-//       setAlphaAlways( saveAA );
-//    }
+      render( rdata, mCurrentDetailLevel, mCurrentIntraDetailLevel, factor );
+   }
+   else
+   {
+      // draw next detail level w/ alpha=1 and this detail level w/
+      // alpha = 1-intraDL/alphaOut
+
+      // first draw next detail level
+      if ( mCurrentDetailLevel + 1 < mShape->details.size() && mShape->details[ mCurrentDetailLevel + 1 ].size > 0.0f )
+         render( rdata, mCurrentDetailLevel+1, 0.0f );
+
+      setAlphaAlways( saveAA * mCurrentIntraDetailLevel / alphaOut );
+      render( rdata, mCurrentDetailLevel, mCurrentIntraDetailLevel, factor );
+      setAlphaAlways( saveAA );
+   }
+	}
 
    //Con::printf("---- Je teste ma transition : %i et la fin %i -------------", mShape->getBeginTransition(), mShape->getEndTransition());
 
