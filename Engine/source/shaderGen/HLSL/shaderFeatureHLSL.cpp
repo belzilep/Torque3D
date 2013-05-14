@@ -2803,6 +2803,13 @@ void FurFeatureHLSL::determineFeature(  Material *material,
 	const FeatureSet &features,
 	MaterialFeatureData *outFeatureData )
 {
+	// If disabled in options, remove
+	if(!Con::getBoolVariable( "$pref::Features::Fur", true ))
+	{
+		outFeatureData->features.removeFeature( MFT_Fur );
+		return;
+	}
+
 	if(outFeatureData->features.hasFeature(MFT_Fur))
 	{
 		outFeatureData->features.removeFeature( MFT_RTLighting );
