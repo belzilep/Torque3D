@@ -262,7 +262,8 @@ void TSShapeInstance::animateNodes(S32 ss)
          mNodeTransforms[i].mul(mNodeTransforms[parentIdx],smNodeLocalTransforms[i]);
    }
 
-   if (mShapeBase && reinterpret_cast<ShapeBaseData *>(mShapeBase->getDataBlock())->IKisActive)
+   if (mShapeBase && reinterpret_cast<ShapeBaseData *>(mShapeBase->getDataBlock())->IKisActive &&
+	   Con::getBoolVariable( "$pref::Features::IK", true ))
    {
 	   animateHead();
    }
