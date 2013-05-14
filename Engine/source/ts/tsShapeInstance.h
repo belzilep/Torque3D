@@ -104,10 +104,15 @@ private:
 	U32 lodRendered_;
 	bool isInTransitionLOD_;
    public:
-
+	   enum LODRenderDetail
+	   {
+		   NoDetail,
+		   Detailled
+	   };
 	// FlyingSquirrels // AH
 	   U32 mCurrentDetailLevelPerso;
 	   S32 mCurrentDetailLevelPersoOld;
+	   GFXStateBlockRef mNormalSB; 
 
    struct ObjectInstance;
    friend class TSThread;

@@ -177,11 +177,10 @@ void TSMesh::innerRender( TSMaterialList *materials, const TSRenderState &rdata,
    coreRI->mFactorAlphaLOD = rdata1.getFactorAlphaLOD();
 
    const MatrixF &objToWorld = GFX->getWorldMatrix();
-   
 
    // Sort by the center point or the bounds.
    if ( rdata1.useOriginSort() )
-      coreRI->sortDistSq = ( objToWorld.getPosition() - state->getCameraPosition() ).lenSquared();
+      coreRI->sortDistSq = ( objToWorld.getPosition() - state->getCameraPosition() ).len();
    else
    {
       Box3F rBox = mBounds;

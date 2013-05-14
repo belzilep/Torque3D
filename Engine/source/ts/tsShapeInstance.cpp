@@ -188,6 +188,7 @@ void TSShapeInstance::buildInstanceData(TSShape * _shape, bool loadMaterials)
 
    debrisRefCount = 0;
 
+   lodRendered_ = NoDetail;
    mCurrentDetailLevelPerso = 0;
    mCurrentDetailLevel = 0;
    mCurrentIntraDetailLevel = 1.0f;
@@ -490,9 +491,8 @@ void TSShapeInstance::render( const TSRenderState &rdata )
 
    F32 factor = 1.0;
    // Trouver la bonne transition si il existe un LOD
-	if ( mCurrentDetailLevelPerso < mShape->getTransitionTime().size() )
+	if ( mCurrentDetailLevelPerso < mShape->getTransitionTime().size()  && Con::getBoolVariable( "$pref::Features::LOD", false ))
 	{
-
 		// ENFIN TROUVÉ CETTE POSITION !!!
 		const MatrixF &objToWorld = GFX->getWorldMatrix();
 		Point3F posObj = objToWorld.getPosition();
@@ -601,36 +601,36 @@ void TSShapeInstance::render( const TSRenderState &rdata )
     else
 	{
    /// This first case is the single detail level render.
-  if ( mCurrentIntraDetailLevel > alphaIn + alphaOut )
-    render( rdata, mCurrentDetailLevel, mCurrentIntraDetailLevel, factor);
-   else if ( mCurrentIntraDetailLevel > alphaOut )
-   {
-      // draw this detail level w/ alpha=1 and next detail level w/
-      // alpha=1-(intraDl-alphaOut)/alphaIn
+	  if ( mCurrentIntraDetailLevel > alphaIn + alphaOut )
+		render( rdata, mCurrentDetailLevel, mCurrentIntraDetailLevel, factor);
+	   else if ( mCurrentIntraDetailLevel > alphaOut )
+	   {
+		  // draw this detail level w/ alpha=1 and next detail level w/
+		  // alpha=1-(intraDl-alphaOut)/alphaIn
 
-      // first draw next detail level
-      if ( mCurrentDetailLevel + 1 < mShape->details.size() && mShape->details[ mCurrentDetailLevel + 1 ].size > 0.0f )
-      {
-         setAlphaAlways( saveAA * ( alphaIn + alphaOut - mCurrentIntraDetailLevel ) / alphaIn );
-         render( rdata, mCurrentDetailLevel + 1, 0.0f, factor );
-      }
+		  // first draw next detail level
+		  if ( mCurrentDetailLevel + 1 < mShape->details.size() && mShape->details[ mCurrentDetailLevel + 1 ].size > 0.0f )
+		  {
+			 setAlphaAlways( saveAA * ( alphaIn + alphaOut - mCurrentIntraDetailLevel ) / alphaIn );
+			 render( rdata, mCurrentDetailLevel + 1, 0.0f, factor );
+		  }
 
-       //setAlphaAlways( saveAA );
-      render( rdata, mCurrentDetailLevel, mCurrentIntraDetailLevel, factor );
-   }
-   else
-   {
-      // draw next detail level w/ alpha=1 and this detail level w/
-      // alpha = 1-intraDL/alphaOut
+		   //setAlphaAlways( saveAA );
+		  render( rdata, mCurrentDetailLevel, mCurrentIntraDetailLevel, factor );
+	   }
+	   else
+	   {
+		  // draw next detail level w/ alpha=1 and this detail level w/
+		  // alpha = 1-intraDL/alphaOut
 
-      // first draw next detail level
-      if ( mCurrentDetailLevel + 1 < mShape->details.size() && mShape->details[ mCurrentDetailLevel + 1 ].size > 0.0f )
-         render( rdata, mCurrentDetailLevel+1, 0.0f );
+		  // first draw next detail level
+		  if ( mCurrentDetailLevel + 1 < mShape->details.size() && mShape->details[ mCurrentDetailLevel + 1 ].size > 0.0f )
+			 render( rdata, mCurrentDetailLevel+1, 0.0f );
 
-      setAlphaAlways( saveAA * mCurrentIntraDetailLevel / alphaOut );
-      render( rdata, mCurrentDetailLevel, mCurrentIntraDetailLevel, factor );
-      setAlphaAlways( saveAA );
-   }
+		  setAlphaAlways( saveAA * mCurrentIntraDetailLevel / alphaOut );
+		  render( rdata, mCurrentDetailLevel, mCurrentIntraDetailLevel, factor );
+		  setAlphaAlways( saveAA );
+	   }
 	}
 
    //Con::printf("---- Je teste ma transition : %i et la fin %i -------------", mShape->getBeginTransition(), mShape->getEndTransition());
