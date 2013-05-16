@@ -38,7 +38,8 @@
 #ifndef _BITVECTOR_H_
 #include "core/bitVector.h"
 #endif
-#include "VoiceChat.h"
+//#include "VoiceChat.h"
+#include "voice.h"
 
 enum GameConnectionConstants
 {
@@ -344,9 +345,9 @@ protected:
 
    // FlyingSquirrels //AH
    private:
-	   VoiceChat  voiceComm;
+	   voiceCommClient  voiceComm;
    public:
-	   VoiceChat *getVoiceComm() { return &voiceComm; }
+	   voiceCommClient *getVoiceComm() { return &voiceComm; }
 };
 
 #endif
