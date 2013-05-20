@@ -455,7 +455,7 @@ void TSShapeInstance::animateHead()
 					{
 						rotDir = 1.0f;
 					}
-					else // finalNeededRotation == 0.0
+					else
 					{
 						// go to the opposite side of the last rotation
 						if (lastRotation < 0.0f)
@@ -466,23 +466,19 @@ void TSShapeInstance::animateHead()
 						{
 							rotDir = -1.0f;
 						}
-					}
-
-					//F32 remainingRadians = finalNeededRotation - ( rotDir * allowedRadiansPerFrame + lastRotation);					
+					}				
 
 					bool exceedsNeededRotation;
 
 					if (finalNeededRotation < 0.0f)
 					{
-						//exceedsNeededRotation = ((rotDir * allowedRadiansPerFrame + lastRotation + remainingRadians * percentageRemRot) > finalNeededRotation ) ? false : true;
 						exceedsNeededRotation = ((rotDir * allowedRadiansPerFrame + lastRotation  ) > finalNeededRotation ) ? false : true;
 					}
 					else if (finalNeededRotation > 0.0f)
 					{
-						//exceedsNeededRotation = ((rotDir * allowedRadiansPerFrame + lastRotation + remainingRadians * percentageRemRot) < finalNeededRotation ) ? false : true;
 						exceedsNeededRotation = ((rotDir * allowedRadiansPerFrame + lastRotation ) < finalNeededRotation ) ? false : true;
 					}
-					else // finalNeededRotation == 0.0f
+					else
 					{
 						if ((rotDir * allowedRadiansPerFrame + lastRotation ) * lastRotation <= 0.0f) // the sign changed or is zero
 						{

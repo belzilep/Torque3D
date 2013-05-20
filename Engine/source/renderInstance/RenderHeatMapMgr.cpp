@@ -71,41 +71,10 @@ void RenderHeatMapMgr::HeatMaterialHook::_overrideFeatures( ProcessedMaterial *m
 	if (  mat->getMaterial() )
 	{
 		fd.features.clear();
-		//fd.features.addFeature( MFT_DiffuseVertColor );
 
 		fd.features.addFeature( MFT_VertTransform );
-
-		//fd.features.addFeature( MFT_DiffuseVertColor );
-
 		fd.features.addFeature( MFT_DiffuseMap );
-
-		//fd.features.addFeature( MFT_GlowMask );
 		fd.features.addFeature( MFT_HeatMap );
-
-		//fd.features.addFeature(MFT_HDROut);
-
-		//fd.features.addFeature( MFT_DiffuseColor );
-
-		//fd.features.addFeature( MFT_PrePassConditioner );	
-
-/*
-		fd.features.removeFeature(MFT_RTLighting);
-		fd.features.removeFeature(MFT_SubSurface);
-		fd.features.removeFeature(MFT_LightMap);
-		fd.features.removeFeature(MFT_ToneMap);
-		fd.features.removeFeature(MFT_VertLitTone);
-		fd.features.removeFeature(MFT_VertLit);
-		fd.features.removeFeature(MFT_EnvMap);
-		fd.features.removeFeature(MFT_CubeMap);
-		fd.features.removeFeature(MFT_PixSpecular);
-		fd.features.removeFeature(MFT_MinnaertShading);
-
-		fd.features.removeFeature(MFT_GlowMask);
-		fd.features.removeFeature(MFT_Visibility);
-		fd.features.removeFeature(MFT_Fog);
-		fd.features.removeFeature(MFT_HDROut);*/
-
-		//fd.features.addFeature( MFT_HeatMap );
 	}
 }
 
@@ -119,14 +88,6 @@ RenderHeatMapMgr::RenderHeatMapMgr()
 	notifyType( RenderPassManager::RIT_Interior );
 	notifyType( RenderPassManager::RIT_Decal );
 	notifyType( RenderPassManager::RIT_Translucent );
-
-	//notifyType( RenderPassManager::RIT_Interior );
-	//notifyType( RenderPassManager::RIT_Terrain );
-	//notifyType( RenderPassManager::RIT_Object );
-	//notifyType( RenderPassManager::RIT_ObjectTranslucent );
-	//notifyType( RenderPassManager::RIT_Custom );
-	//notifyType( RenderPassManager::RIT_Particle );
-	//notifyType( RenderPassManager::RIT_Occluder );
 
 	mNamedTarget.registerWithName( "heatmapbuffer" );
 	mTargetSizeType = WindowSize;
